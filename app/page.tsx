@@ -1,65 +1,109 @@
-import Image from "next/image";
+"use client";
+
+import { useCallback, useMemo, useState } from "react";
+import { Navbar } from "@/components/navbar";
+import { Hero } from "@/components/Hero";
+import { ProductGrid } from "@/components/ProductGrid";
+import { Footer } from "@/components/Footer";
+import { products, type ProductCategory } from "@/data/products";
+
+const PAGE_SIZE = 9;
 
 export default function Home() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<"All" | ProductCategory>("All");
+  const [popularOnly, setPopularOnly] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  const scrollToSection = useCallback((sectionId: string) => {
+    const target = document.getElementById(sectionId);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
+
+  const resetListingWindow = useCallback(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, []);
+
+  const handleSelectCategory = useCallback((category: ProductCategory) => {
+    setSelectedCategory(category);
+    resetListingWindow();
+  }, [resetListingWindow]);
+
+  const handleShowAll = useCallback(() => {
+    setSelectedCategory("All");
+    setPopularOnly(false);
+    resetListingWindow();
+  }, [resetListingWindow]);
+
+  const filteredProducts = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+    return products.filter((product) => {
+      const categoryMatch = selectedCategory === "All" || product.category === selectedCategory;
+      const popularMatch = popularOnly ? product.popular : true;
+      const queryMatch =
+        query.length === 0
+          ? true
+          : product.name.toLowerCase().includes(query) ||
+            product.description.toLowerCase().includes(query) ||
+            product.category.toLowerCase().includes(query) ||
+            product.subcategory.toLowerCase().includes(query);
+
+      return categoryMatch && popularMatch && queryMatch;
+    });
+  }, [searchTerm, selectedCategory, popularOnly]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen bg-[#F5F7FB] text-[#0F172A]">
+      <Navbar onNavigate={scrollToSection} onSelectCategory={handleSelectCategory} onShowAll={handleShowAll} />
+      <Hero
+        searchTerm={searchTerm}
+        onSearchChange={(value) => {
+          setSearchTerm(value);
+          resetListingWindow();
+        }}
+        onExploreTools={() => scrollToSection("catalogue")}
+        onViewMarketplace={() => {
+          handleShowAll();
+          scrollToSection("catalogue");
+        }}
+      />
+      <ProductGrid
+        products={filteredProducts}
+        visibleCount={visibleCount}
+        canLoadMore={visibleCount < filteredProducts.length}
+        searchTerm={searchTerm}
+        selectedCategory={selectedCategory}
+        popularOnly={popularOnly}
+        onSearchChange={(value) => {
+          setSearchTerm(value);
+          resetListingWindow();
+        }}
+        onCategoryChange={(value) => {
+          setSelectedCategory(value);
+          resetListingWindow();
+        }}
+        onPopularToggle={() => {
+          setPopularOnly((prev) => !prev);
+          resetListingWindow();
+        }}
+        onLoadMore={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
+      />
+
+      <section id="cta" className="mx-auto max-w-7xl px-4 py-10 md:px-6">
+        <div className="rounded-2xl border border-[#E5E7EB] bg-white p-8 text-center shadow-md">
+          <h2 className="text-2xl font-bold text-[#0F172A] md:text-3xl">Sign up today to save on SaaS</h2>
+          <p className="mx-auto mt-2 max-w-2xl text-sm font-medium text-[#64748B] md:text-base">
+            Join thousands of teams discovering exclusive software discounts every week.
           </p>
+          <button onClick={() => scrollToSection("catalogue")} className="transition-lift mt-5 rounded-full bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-[#1E40AF]">
+            Get Started
+          </button>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </section>
+
+      <Footer onNavigate={scrollToSection} />
+    </main>
   );
 }
