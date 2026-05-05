@@ -109,7 +109,7 @@ export default function Explore() {
       </section>
 
       {toastMessage ? (
-        <div className="fixed bottom-6 right-6 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-xl">
+        <div className="fixed bottom-4 left-4 right-4 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-xl sm:bottom-6 sm:left-auto sm:right-6">
           Purchase Successful: {toastMessage}
         </div>
       ) : null}

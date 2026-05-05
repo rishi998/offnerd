@@ -37,7 +37,7 @@ export function Footer({ onNavigate }: FooterProps) {
           <div className="lg:col-span-1">
             <h3 className="text-base font-bold">Newsletter</h3>
             <p className="mt-3 text-sm font-medium text-blue-100">Get the latest deals and marketplace updates weekly.</p>
-            <div className="mt-4 flex gap-2">
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <input
                 type="email"
                 placeholder="Email address"
@@ -45,7 +45,7 @@ export function Footer({ onNavigate }: FooterProps) {
               />
               <button
                 onClick={() => onNavigate("cta")}
-                className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#1E40AF] shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+                className="w-full rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#1E40AF] shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl sm:w-auto"
               >
                 Join
               </button>

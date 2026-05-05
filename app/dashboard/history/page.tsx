@@ -34,27 +34,29 @@ export default function History() {
             <p className="mt-2 text-sm text-slate-400">Once you buy products, they will appear here.</p>
           </div>
         ) : (
-          <table className="w-full text-left text-sm">
-            <thead className="border-b border-[#1F2937] bg-[#0f172a]">
-              <tr>
-                <th className="px-4 py-3 font-semibold text-slate-300">Name</th>
-                <th className="px-4 py-3 font-semibold text-slate-300">Date</th>
-                <th className="px-4 py-3 font-semibold text-slate-300">Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr
-                  key={`${item.id}-${item.purchaseDate}`}
-                  className="border-b border-[#1F2937] transition hover:bg-[#0f172a]"
-                >
-                  <td className="px-4 py-3 text-slate-100">{item.name}</td>
-                  <td className="px-4 py-3 text-slate-400">{new Date(item.purchaseDate).toLocaleDateString()}</td>
-                  <td className="px-4 py-3 font-medium text-slate-100">Rs. {item.price}</td>
+          <div className="overflow-x-auto">
+            <table className="min-w-[520px] w-full text-left text-sm">
+              <thead className="border-b border-[#1F2937] bg-[#0f172a]">
+                <tr>
+                  <th className="px-4 py-3 font-semibold text-slate-300">Name</th>
+                  <th className="px-4 py-3 font-semibold text-slate-300">Date</th>
+                  <th className="px-4 py-3 font-semibold text-slate-300">Price</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <tr
+                    key={`${item.id}-${item.purchaseDate}`}
+                    className="border-b border-[#1F2937] transition hover:bg-[#0f172a]"
+                  >
+                    <td className="px-4 py-3 text-slate-100">{item.name}</td>
+                    <td className="px-4 py-3 text-slate-400">{new Date(item.purchaseDate).toLocaleDateString()}</td>
+                    <td className="px-4 py-3 font-medium text-slate-100">Rs. {item.price}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </section>

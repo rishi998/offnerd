@@ -3,16 +3,22 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
 
 export const metadata: Metadata = {
   title: "NachoNacho Inspired SaaS Marketplace",
   description:
     "Pixel-close static SaaS marketplace landing page inspired by NachoNacho with mega-menu, product cards, and conversion-first layout.",
+  metadataBase: new URL(siteUrl),
   openGraph: {
     title: "NachoNacho Inspired SaaS Marketplace",
     description:
       "Discover eCommerce SaaS products, compare offers, and connect instantly through WhatsApp-ready deal buttons.",
-    url: "https://saas-marketplace.example",
+    url: "/",
     siteName: "NachoNacho Inspired Marketplace",
     type: "website",
   },

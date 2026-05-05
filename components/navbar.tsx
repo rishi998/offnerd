@@ -142,7 +142,7 @@ export function Navbar({ onNavigate, onSelectCategory, onShowAll }: NavbarProps)
                 <ChevronDown className={`h-4 w-4 transition-transform ${isMobileMarketOpen ? "rotate-180" : ""}`} />
               </button>
               {isMobileMarketOpen ? (
-                <div className="grid grid-cols-2 gap-2 rounded-xl border border-[#E5E7EB] bg-[#F8FAFC] p-3">
+                <div className="grid grid-cols-1 gap-2 rounded-xl border border-[#E5E7EB] bg-[#F8FAFC] p-3 sm:grid-cols-2">
                   {(["AI Tools", "OTT / Entertainment", "Development Tools", "Cloud / DevOps", "Marketing", "Design", "Communication", "Business / Finance"] as ProductCategory[]).map(
                     (category) => (
                       <button
@@ -168,11 +168,11 @@ export function Navbar({ onNavigate, onSelectCategory, onShowAll }: NavbarProps)
               <button onClick={() => handleNavClick("about")} className="block text-left text-sm font-medium text-[#0F172A]">
                 About
               </button>
-              <div className="flex items-center gap-2 pt-1">
+              <div className="flex flex-col gap-2 pt-1 sm:flex-row sm:items-center">
                 <button onClick={() => handleNavClick("about")} className="rounded-full px-3 py-2 text-sm font-semibold text-[#0F172A]">
                   Log In
                 </button>
-                <button onClick={() => handleNavClick("cta")} className="rounded-full border border-[#CBD5E1] bg-white px-5 py-2.5 text-sm font-semibold text-[#0F172A] shadow-md">
+                <button onClick={() => handleNavClick("cta")} className="w-full rounded-full border border-[#CBD5E1] bg-white px-5 py-2.5 text-sm font-semibold text-[#0F172A] shadow-md sm:w-auto">
                   Get started
                 </button>
               </div>
