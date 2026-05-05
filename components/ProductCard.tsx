@@ -6,7 +6,7 @@ import { buyProduct } from "@/lib/store";
 import type { Product } from "@/data/products";
 import type { Product as LegacyProduct } from "@/lib/data";
 
-const WHATSAPP_PHONE = "919967843811";
+const WHATSAPP_PHONE = "9968743811";
 
 type ProductCardProps = {
   product: Product | LegacyProduct;

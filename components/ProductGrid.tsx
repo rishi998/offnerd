@@ -57,7 +57,7 @@ export function ProductGrid({
             {carouselItems.map((product, idx) => (
               <button
                 key={`${product.id}-${idx}`}
-                onClick={() => window.open(`https://wa.me/919999999999?text=${encodeURIComponent(`I want ${product.name} - ${product.description} for 1 month`)}`, "_blank")}
+                onClick={() => window.open(`https://wa.me/9968743811?text=${encodeURIComponent(`I want ${product.name} - ${product.description} for 1 month`)}`, "_blank")}
                 className="min-w-56 rounded-xl border border-[#E5E7EB] bg-[#F8FAFC] px-4 py-3 text-left transition duration-300 hover:scale-[1.03] hover:shadow-md"
               >
                 <p className="text-sm font-semibold text-[#0F172A]">{product.name}</p>
