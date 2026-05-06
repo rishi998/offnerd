@@ -1,11 +1,14 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/Hero";
+import { LogoMarquee } from "@/components/LogoMarquee";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Footer } from "@/components/Footer";
-import { products, type ProductCategory } from "@/data/products";
+import { matchesMarketplaceSearch, products, type ProductCategory } from "@/data/products";
 
 const PAGE_SIZE = 9;
 
@@ -38,19 +41,10 @@ export default function Home() {
   }, [resetListingWindow]);
 
   const filteredProducts = useMemo(() => {
-    const query = searchTerm.trim().toLowerCase();
     return products.filter((product) => {
       const categoryMatch = selectedCategory === "All" || product.category === selectedCategory;
       const popularMatch = popularOnly ? product.popular : true;
-      const queryMatch =
-        query.length === 0
-          ? true
-          : product.name.toLowerCase().includes(query) ||
-            product.description.toLowerCase().includes(query) ||
-            product.category.toLowerCase().includes(query) ||
-            product.subcategory.toLowerCase().includes(query);
-
-      return categoryMatch && popularMatch && queryMatch;
+      return categoryMatch && popularMatch && matchesMarketplaceSearch(product, searchTerm);
     });
   }, [searchTerm, selectedCategory, popularOnly]);
 
@@ -68,12 +62,19 @@ export default function Home() {
           handleShowAll();
           scrollToSection("catalogue");
         }}
+        searchResults={filteredProducts}
+        resultsVisible={Boolean(searchTerm.trim())}
+        visibleCount={visibleCount}
+        canLoadMore={visibleCount < filteredProducts.length}
+        onLoadMore={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
       />
+      <LogoMarquee />
       <ProductGrid
         products={filteredProducts}
         visibleCount={visibleCount}
         canLoadMore={visibleCount < filteredProducts.length}
         searchTerm={searchTerm}
+        listingInHero={Boolean(searchTerm.trim())}
         selectedCategory={selectedCategory}
         popularOnly={popularOnly}
         onSearchChange={(value) => {
@@ -91,16 +92,31 @@ export default function Home() {
         onLoadMore={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
       />
 
-      <section id="cta" className="mx-auto max-w-7xl px-4 py-10 md:px-6">
-        <div className="rounded-2xl border border-[#E5E7EB] bg-white p-8 text-center shadow-md">
-          <h2 className="text-2xl font-bold text-[#0F172A] md:text-3xl">Sign up today to save on SaaS</h2>
-          <p className="mx-auto mt-2 max-w-2xl text-sm font-medium text-[#64748B] md:text-base">
+      <section id="cta" className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as const }}
+          className="rounded-3xl border border-[#E5E7EB]/90 bg-white/95 p-10 text-center shadow-[0_24px_64px_-28px_rgba(15,23,42,0.18)] backdrop-blur-sm md:p-14"
+        >
+          <h2 className="text-3xl font-extrabold tracking-tight text-[#0F172A] md:text-4xl">
+            Sign up today to save on SaaS
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-base font-medium leading-relaxed text-[#64748B]">
             Join thousands of teams discovering exclusive software discounts every week.
           </p>
-          <button onClick={() => scrollToSection("catalogue")} className="transition-lift mt-5 rounded-full bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-[#1E40AF]">
-            Get Started
-          </button>
-        </div>
+          <motion.button
+            type="button"
+            onClick={() => scrollToSection("catalogue")}
+            whileHover={{ scale: 1.04, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            className="group mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#2563EB] via-[#1d4ed8] to-[#1e40af] px-8 py-3 text-sm font-semibold text-white shadow-[0_14px_40px_-10px_rgba(37,99,235,0.55)] transition-shadow hover:shadow-[0_18px_48px_-8px_rgba(37,99,235,0.65)]"
+          >
+            Explore marketplace
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </motion.button>
+        </motion.div>
       </section>
 
       <Footer onNavigate={scrollToSection} />

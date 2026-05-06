@@ -5,7 +5,25 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/navbar";
 import { ProductCard } from "@/components/ProductCard";
-import { products } from "@/lib/data";
+import { products, type Product } from "@/lib/data";
+
+function exploreProductMatchesSearch(product: Product, rawQuery: string): boolean {
+  const query = rawQuery.trim().toLowerCase();
+  if (!query) return true;
+
+  const haystack = `${product.name} ${product.description} ${product.category} ${product.type}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+
+  const tokens = query
+    .split(/\s+/)
+    .map((t) => t.replace(/[^a-z0-9]/g, ""))
+    .filter(Boolean);
+
+  if (tokens.length === 0) return true;
+
+  return tokens.every((token) => haystack.includes(token));
+}
 
 function LoadingCard() {
   return <div className="h-56 animate-pulse rounded-2xl border border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-900" />;
@@ -25,7 +43,7 @@ export default function Explore() {
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      const searchMatch = product.name.toLowerCase().includes(search.toLowerCase());
+      const searchMatch = exploreProductMatchesSearch(product, search);
       const typeMatch = typeFilter === "all" ? true : product.type === typeFilter;
       const priceMatch =
         priceFilter === "all"

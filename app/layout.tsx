@@ -10,16 +10,16 @@ const siteUrl =
     : "http://localhost:3000");
 
 export const metadata: Metadata = {
-  title: "NachoNacho Inspired SaaS Marketplace",
+  title: "OFF Nerd — SaaS Marketplace",
   description:
-    "Pixel-close static SaaS marketplace landing page inspired by NachoNacho with mega-menu, product cards, and conversion-first layout.",
+    "Discover eCommerce SaaS products, compare offers, and connect instantly through WhatsApp-ready deal buttons.",
   metadataBase: new URL(siteUrl),
   openGraph: {
-    title: "NachoNacho Inspired SaaS Marketplace",
+    title: "OFF Nerd — SaaS Marketplace",
     description:
       "Discover eCommerce SaaS products, compare offers, and connect instantly through WhatsApp-ready deal buttons.",
     url: "/",
-    siteName: "NachoNacho Inspired Marketplace",
+    siteName: "OFF Nerd",
     type: "website",
   },
 };

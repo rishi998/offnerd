@@ -120,3 +120,26 @@ export const products: Product[] = [
 export const categories: ProductCategory[] = categoryStructure.map((entry) => entry.category);
 
 export const highlightTools = products.filter((product) => product.popular).slice(0, 10).map((product) => product.name);
+
+function compactAlphanumeric(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+/** True if the query matches this catalog tool (id, logo, category, subcategory, name, description; punctuation-insensitive). */
+export function matchesMarketplaceSearch(product: Product, rawQuery: string): boolean {
+  const query = rawQuery.trim().toLowerCase();
+  if (!query) return true;
+
+  const haystack = compactAlphanumeric(
+    [product.id, product.name, product.description, product.category, product.subcategory, product.logo].join(" "),
+  );
+
+  const tokens = query
+    .split(/\s+/)
+    .map((t) => compactAlphanumeric(t))
+    .filter(Boolean);
+
+  if (tokens.length === 0) return true;
+
+  return tokens.every((token) => haystack.includes(token));
+}

@@ -48,3 +48,34 @@ body {
     transform: translateX(-50%);
   }
 }
+
+.trusted-marquee-track {
+  animation: trusted-marquee 48s linear infinite;
+}
+
+.trusted-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes trusted-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-33.333333%);
+  }
+}
+
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-logo-float {
+  animation: logo-float 4.5s ease-in-out infinite;
+}
