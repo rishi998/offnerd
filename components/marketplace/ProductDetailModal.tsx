@@ -16,6 +16,7 @@ import {
 import type { Product } from "@/data/products";
 import { BADGE_LABELS, getMarketplaceView, type GradientTheme } from "@/data/marketplace";
 import { whatsappDmHref } from "@/lib/site";
+import { LogoDock } from "@/components/marketplace/LogoDock";
 
 const THEME_STYLES: Record<
   GradientTheme,
@@ -164,10 +165,18 @@ function ModalBody({
             <div className="relative shrink-0">
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-[-10px] rounded-3xl bg-gradient-to-br from-white/50 to-transparent blur-xl"
+                className="pointer-events-none absolute inset-[-18%] rounded-[2rem] bg-gradient-to-br from-white/55 via-white/15 to-transparent blur-2xl"
               />
-              <div className="relative grid h-[4.5rem] w-[4.5rem] place-items-center rounded-3xl border border-white/50 bg-white/85 text-xl font-extrabold text-[#1e40af] shadow-[0_18px_44px_-18px_rgba(37,99,235,0.35)] backdrop-blur-md sm:h-[5.25rem] sm:w-[5.25rem] sm:text-2xl">
-                {product.logo}
+              <div className="relative">
+                <LogoDock
+                  key={product.id}
+                  product={product}
+                  size="hero"
+                  variant="light"
+                  listingTheme={listing.theme}
+                  priority
+                  hoverLift
+                />
               </div>
             </div>
 

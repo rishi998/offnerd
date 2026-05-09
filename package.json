@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "export-logos": "node scripts/export-marketplace-logos.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
@@ -24,6 +25,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "postcss": "^8.5.10",
+    "simple-icons": "^16.18.1",
     "tailwindcss": "^4.2.4",
     "typescript": "^5"
   }

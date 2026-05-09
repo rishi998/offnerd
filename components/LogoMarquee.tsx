@@ -1,26 +1,23 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { Product } from "@/data/products";
+import { LogoDock } from "@/components/marketplace/LogoDock";
 
-const BRANDS = [
-  "React",
-  "Next.js",
-  "Node.js",
-  "TypeScript",
-  "MongoDB",
-  "PostgreSQL",
-  "AWS",
-  "Stripe",
-  "OpenAI",
-  "Vercel",
-  "Tailwind CSS",
-  "Docker",
-  "Kubernetes",
-  "GraphQL",
-  "Redis",
-  "Cloudflare",
-  "Framer Motion",
-  "Figma",
+/** Synthetic rows — `logoKey` resolves via `logoRegistry` (no catalog `id` needed). */
+const MARQUEE_BRANDS: Pick<Product, "id" | "name" | "logo" | "logoKey">[] = [
+  { id: "_mq-chatgpt", name: "ChatGPT", logo: "C", logoKey: "chatgpt" },
+  { id: "_mq-gemini", name: "Gemini", logo: "Gm", logoKey: "gemini" },
+  { id: "_mq-linear", name: "Linear", logo: "Ln", logoKey: "linear" },
+  { id: "_mq-supabase", name: "Supabase", logo: "Sb", logoKey: "supabase" },
+  { id: "_mq-vercel", name: "Vercel", logo: "V", logoKey: "vercel" },
+  { id: "_mq-stripe", name: "Stripe", logo: "St", logoKey: "stripe" },
+  { id: "_mq-notion", name: "Notion", logo: "N", logoKey: "notion" },
+  { id: "_mq-figma", name: "Figma", logo: "F", logoKey: "figma" },
+  { id: "_mq-framer", name: "Framer", logo: "Fr", logoKey: "framer" },
+  { id: "_mq-mongodb", name: "MongoDB", logo: "Mg", logoKey: "mongodb" },
+  { id: "_mq-github", name: "GitHub", logo: "GH", logoKey: "github" },
+  { id: "_mq-slack", name: "Slack", logo: "S", logoKey: "slack" },
 ];
 
 function duplicate<T>(items: T[], times: number): T[] {
@@ -28,7 +25,7 @@ function duplicate<T>(items: T[], times: number): T[] {
 }
 
 export function LogoMarquee() {
-  const track = duplicate(BRANDS, 3);
+  const track = duplicate(MARQUEE_BRANDS, 3);
 
   return (
     <section aria-label="Trusted technologies and platforms" className="relative w-full overflow-hidden py-10 md:py-12">
@@ -48,13 +45,14 @@ export function LogoMarquee() {
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#F5F7FB] to-transparent md:w-24" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#F5F7FB] to-transparent md:w-24" />
         <div className="overflow-hidden rounded-2xl border border-[#E5E7EB]/90 bg-white/80 px-4 py-4 shadow-[0_18px_50px_-20px_rgba(15,23,42,0.18)] backdrop-blur-md md:px-5 md:py-5">
-          <div className="trusted-marquee-track flex w-max gap-5 md:gap-6">
-            {track.map((name, idx) => (
+          <div className="trusted-marquee-track flex w-max items-center gap-4 md:gap-5">
+            {track.map((product, idx) => (
               <div
-                key={`${name}-${idx}`}
-                className="group flex min-w-[7.75rem] select-none flex-col items-center justify-center rounded-xl border border-[#EEF2FF] bg-gradient-to-br from-white to-[#F8FAFC] px-4 py-3 shadow-[0_6px_20px_-8px_rgba(15,23,42,0.12)] transition-transform duration-300 ease-out group-hover:scale-[1.06] md:min-w-[8.5rem] md:px-5 md:py-3.5"
+                key={`${product.id}-${idx}`}
+                className="group flex min-w-[8.5rem] select-none flex-col items-center justify-center gap-2 px-2 py-2 transition-transform duration-300 ease-out group-hover:scale-[1.04] md:min-w-[9rem]"
               >
-                <span className="text-center text-[0.7rem] font-semibold tracking-tight text-[#334155] md:text-sm">{name}</span>
+                <LogoDock key={`${product.id}-${idx}`} product={product} size="sm" variant="light" priority={idx < 6} hoverLift />
+                <span className="text-center text-[0.65rem] font-semibold tracking-tight text-[#475569] md:text-xs">{product.name}</span>
               </div>
             ))}
           </div>

@@ -7,6 +7,7 @@ import type { Product as MarketplaceProduct } from "@/data/products";
 import type { Product as LegacyProduct } from "@/lib/data";
 import { getMarketplaceView } from "@/data/marketplace";
 import { useProductModal } from "@/components/marketplace/ProductModalProvider";
+import { LogoDock } from "@/components/marketplace/LogoDock";
 
 const WHATSAPP_PHONE = "9968743811";
 
@@ -73,9 +74,13 @@ export function ProductCard({ product, onPurchase }: ProductCardProps) {
       className={`group rounded-3xl border border-[#E5E7EB]/90 bg-white p-6 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.12),0_2px_8px_-4px_rgba(15,23,42,0.08)] transition-shadow duration-300 hover:border-[#E2E8F0] hover:shadow-[0_24px_48px_-16px_rgba(15,23,42,0.18),0_8px_16px_-8px_rgba(37,99,235,0.08)] ${canOpenDetail ? "cursor-pointer" : ""}`}
     >
       <div className="mb-5 flex items-start justify-between gap-3">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#EFF6FF] to-[#DBEAFE] text-sm font-bold text-[#1E40AF] ring-1 ring-[#BFDBFE]/80">
-          {isMarketplaceProduct(product) ? product.logo : product.name.slice(0, 2).toUpperCase()}
-        </span>
+        {isMarketplaceProduct(product) ? (
+          <LogoDock key={product.id} product={product} size="sm" variant="light" hoverLift className="shrink-0" />
+        ) : (
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#EFF6FF] to-[#DBEAFE] text-sm font-bold text-[#1E40AF] ring-1 ring-[#BFDBFE]/80">
+            {product.name.slice(0, 2).toUpperCase()}
+          </span>
+        )}
         <div className="flex flex-col items-end gap-1.5">
           {trending ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-violet-500/15 to-blue-500/12 px-2.5 py-0.5 text-[0.65rem] font-extrabold uppercase tracking-wide text-violet-900 ring-1 ring-violet-200/70">

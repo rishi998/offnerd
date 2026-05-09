@@ -15,6 +15,8 @@ export type Product = {
   category: ProductCategory;
   subcategory: string;
   logo: string;
+  /** Override key into `logoRegistry` / `productLogoKeyById` resolution */
+  logoKey?: string;
   popular: boolean;
 };
 

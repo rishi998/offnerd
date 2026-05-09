@@ -7,6 +7,7 @@ import type { Product, ProductCategory } from "@/data/products";
 import type { QuickFilter } from "@/data/marketplace";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Search } from "lucide-react";
+import { LogoDock } from "@/components/marketplace/LogoDock";
 
 const sectionFade = {
   hidden: { opacity: 0, y: 28 },
@@ -107,15 +108,26 @@ export function ProductGrid({
                     );
                   }
                 }}
-                className="group relative min-w-60 rounded-2xl border border-[#EEF2FF] bg-gradient-to-br from-white to-[#F8FAFC] px-5 py-4 text-left shadow-[0_12px_32px_-16px_rgba(15,23,42,0.14)] transition duration-300 hover:-translate-y-1.5 hover:border-[#C7D2FE] hover:shadow-[0_22px_48px_-20px_rgba(37,99,235,0.18)] md:min-w-64"
+                className="group relative flex min-w-60 items-center gap-3 rounded-2xl border border-[#EEF2FF] bg-gradient-to-br from-white to-[#F8FAFC] px-5 py-4 text-left shadow-[0_12px_32px_-16px_rgba(15,23,42,0.14)] transition duration-300 hover:-translate-y-1.5 hover:border-[#C7D2FE] hover:shadow-[0_22px_48px_-20px_rgba(37,99,235,0.18)] md:min-w-64"
               >
                 {product.popular ? (
                   <span className="absolute right-3 top-3 rounded-md bg-[#FACC15] px-1.5 py-0.5 text-[0.55rem] font-extrabold uppercase tracking-wide text-[#713F12] shadow-sm">
                     Hot
                   </span>
                 ) : null}
-                <p className="text-sm font-bold tracking-tight text-[#0F172A]">{product.name}</p>
-                <p className="mt-1 truncate text-xs font-semibold text-[#64748B]">{product.subcategory}</p>
+                <LogoDock
+                  key={`${product.id}-${idx}`}
+                  product={product}
+                  size="sm"
+                  variant="light"
+                  priority={idx < 4}
+                  hoverLift
+                  className="shrink-0"
+                />
+                <div className="min-w-0">
+                  <p className="text-sm font-bold tracking-tight text-[#0F172A]">{product.name}</p>
+                  <p className="mt-1 truncate text-xs font-semibold text-[#64748B]">{product.subcategory}</p>
+                </div>
               </button>
             ))}
           </div>

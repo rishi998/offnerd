@@ -1,4 +1,5 @@
 import type { Product, ProductCategory } from "./products";
+import { resolveLogoKey } from "@/lib/logo-registry";
 
 /** Structured marketplace metadata — merged with catalog `Product` rows. */
 export type ProductBadgeId =
@@ -36,6 +37,8 @@ export type MarketplaceListing = {
   cloudStorage?: string;
   heroImage?: string;
   tagline: string;
+  /** Resolved marketplace logo registry key (from product + overrides) */
+  logoKey?: string;
 };
 
 export type MarketplaceView = {
@@ -366,7 +369,11 @@ export function getMarketplaceView(product: Product): MarketplaceView {
     listing.officialPriceINR > 0
       ? Math.min(99, Math.max(5, Math.round((1 - listing.salePriceINR / listing.officialPriceINR) * 100)))
       : 0;
-  return { product, listing, savingsPercent: pct };
+  return {
+    product,
+    listing: { ...listing, logoKey: resolveLogoKey(product) },
+    savingsPercent: pct,
+  };
 }
 
 function compactAlphanumeric(value: string): string {
@@ -382,6 +389,7 @@ export function marketplaceSearchBlob(product: Product): string {
     product.category,
     product.subcategory,
     product.logo,
+    listing.logoKey ?? "",
     listing.displayTitle,
     listing.planType,
     listing.durationLabel,
