@@ -3,26 +3,24 @@
 import { motion } from "framer-motion";
 
 const BRANDS = [
-  "ChatGPT",
-  "Claude",
-  "Gemini",
-  "Perplexity",
-  "Midjourney",
-  "Runway",
-  "Netflix",
-  "Prime Video",
-  "Disney+",
-  "Spotify",
-  "YouTube",
-  "Vercel",
-  "Netlify",
+  "React",
+  "Next.js",
+  "Node.js",
+  "TypeScript",
+  "MongoDB",
+  "PostgreSQL",
   "AWS",
+  "Stripe",
+  "OpenAI",
+  "Vercel",
+  "Tailwind CSS",
+  "Docker",
+  "Kubernetes",
+  "GraphQL",
+  "Redis",
   "Cloudflare",
-  "Firebase",
-  "Meta Ads",
-  "Google Ads",
-  "TikTok Ads",
-  "LinkedIn Ads",
+  "Framer Motion",
+  "Figma",
 ];
 
 function duplicate<T>(items: T[], times: number): T[] {
@@ -56,9 +54,7 @@ export function LogoMarquee() {
                 key={`${name}-${idx}`}
                 className="group flex min-w-[7.75rem] select-none flex-col items-center justify-center rounded-xl border border-[#EEF2FF] bg-gradient-to-br from-white to-[#F8FAFC] px-4 py-3 shadow-[0_6px_20px_-8px_rgba(15,23,42,0.12)] transition-transform duration-300 ease-out group-hover:scale-[1.06] md:min-w-[8.5rem] md:px-5 md:py-3.5"
               >
-                <span className="text-center text-[0.7rem] font-semibold tracking-tight text-[#334155] md:text-sm">
-                  {name}
-                </span>
+                <span className="text-center text-[0.7rem] font-semibold tracking-tight text-[#334155] md:text-sm">{name}</span>
               </div>
             ))}
           </div>

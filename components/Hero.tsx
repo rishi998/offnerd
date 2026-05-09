@@ -30,6 +30,9 @@ type HeroProps = {
   visibleCount: number;
   canLoadMore: boolean;
   onLoadMore: () => void;
+  headline?: string;
+  subheadline?: string;
+  showTags?: boolean;
 };
 
 export function Hero({
@@ -42,6 +45,9 @@ export function Hero({
   visibleCount,
   canLoadMore,
   onLoadMore,
+  headline = "eCommerce SaaS Products",
+  subheadline = "Discover the world's best AI tools, OTT platforms, SaaS apps, marketing services, and growth software — all in one powerful marketplace.",
+  showTags = true,
 }: HeroProps) {
   const visibleProducts = searchResults.slice(0, visibleCount);
 
@@ -62,16 +68,12 @@ export function Hero({
           <motion.div variants={fadeUp} className="relative mx-auto inline-block">
             <div aria-hidden className="absolute inset-[-20%] rounded-[2rem] bg-gradient-to-br from-[#2563EB]/12 via-transparent to-[#FACC15]/10 blur-xl" />
             <h1 className="relative text-balance bg-gradient-to-br from-[#0c1e3d] from-15% via-[#0f172a] to-black bg-clip-text text-5xl font-extrabold leading-[1.08] tracking-tight text-transparent drop-shadow-[0_2px_24px_rgba(15,23,42,0.12)] md:text-7xl lg:text-[4.75rem]">
-              eCommerce SaaS Products
+              {headline}
             </h1>
           </motion.div>
 
-          <motion.p
-            variants={fadeUp}
-            className="mx-auto mt-6 max-w-[700px] text-pretty text-base font-medium leading-relaxed text-[#64748B] md:text-lg"
-          >
-            Discover the world&apos;s best AI tools, OTT platforms, SaaS apps, marketing services, and growth software
-            &mdash; all in one powerful marketplace.
+          <motion.p variants={fadeUp} className="mx-auto mt-6 max-w-[700px] text-pretty text-base font-medium leading-relaxed text-[#64748B] md:text-lg">
+            {subheadline}
           </motion.p>
 
           <motion.label
@@ -127,16 +129,18 @@ export function Hero({
             </motion.div>
           ) : null}
 
-          <motion.div variants={fadeUp} className="mt-6 flex flex-wrap items-center justify-center gap-2">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-[#E5E7EB]/90 bg-white/80 px-3.5 py-1.5 text-xs font-semibold text-[#475569] shadow-sm backdrop-blur-sm"
-              >
-                {tag}
-              </span>
-            ))}
-          </motion.div>
+          {showTags ? (
+            <motion.div variants={fadeUp} className="mt-6 flex flex-wrap items-center justify-center gap-2">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-[#E5E7EB]/90 bg-white/80 px-3.5 py-1.5 text-xs font-semibold text-[#475569] shadow-sm backdrop-blur-sm"
+                >
+                  {tag}
+                </span>
+              ))}
+            </motion.div>
+          ) : null}
 
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <motion.button

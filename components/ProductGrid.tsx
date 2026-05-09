@@ -1,9 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { ProductCard } from "@/components/ProductCard";
 import type { Product, ProductCategory } from "@/data/products";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { ArrowRight, Check, Search } from "lucide-react";
 
 const sectionFade = {
   hidden: { opacity: 0, y: 28 },
@@ -62,14 +63,18 @@ export function ProductGrid({
         viewport={{ once: true, amount: 0.2 }}
         className="mb-14"
       >
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-[#0F172A] md:text-4xl">Featured Tools</h2>
-            <p className="mt-1.5 max-w-lg text-sm font-medium text-[#64748B]">Hand-picked products teams reach for first.</p>
+            <h2 className="text-3xl font-extrabold tracking-tight text-[#0F172A] md:text-[2.25rem]">Featured tools</h2>
+            <p className="mt-2 max-w-lg text-sm font-medium leading-relaxed text-[#64748B] md:text-base">
+              Hand-picked listings with sharper typography, balanced spacing, and consistent glass cards.
+            </p>
           </div>
-          <span className="rounded-full bg-[#FACC15] px-4 py-1.5 text-xs font-bold text-[#854D0E] shadow-sm">Top 10</span>
+          <span className="rounded-full bg-gradient-to-r from-[#FACC15] to-[#FDE047] px-4 py-1.5 text-xs font-bold text-[#854D0E] shadow-[0_10px_28px_-12px_rgba(234,179,8,0.45)]">
+            Curated
+          </span>
         </div>
-        <div className="overflow-hidden rounded-3xl border border-[#E5E7EB]/90 bg-white/90 p-4 shadow-[0_20px_50px_-24px_rgba(15,23,42,0.2)] backdrop-blur-sm md:p-5">
+        <div className="overflow-hidden rounded-3xl border border-[#E5E7EB]/90 bg-white/90 p-4 shadow-[0_24px_60px_-26px_rgba(15,23,42,0.22)] ring-1 ring-white/60 backdrop-blur-md md:p-6">
           <div className="moving-track flex w-max gap-4 md:gap-5">
             {carouselItems.map((product, idx) => (
               <button
@@ -80,7 +85,7 @@ export function ProductGrid({
                     "_blank",
                   )
                 }
-                className="group min-w-60 rounded-2xl border border-[#EEF2FF] bg-gradient-to-br from-white to-[#F8FAFC] px-5 py-4 text-left shadow-[0_10px_28px_-14px_rgba(15,23,42,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#E0E7FF] hover:shadow-[0_18px_40px_-18px_rgba(15,23,42,0.2)] md:min-w-64"
+                className="group min-w-60 rounded-2xl border border-[#EEF2FF] bg-gradient-to-br from-white to-[#F8FAFC] px-5 py-4 text-left shadow-[0_12px_32px_-16px_rgba(15,23,42,0.14)] transition duration-300 hover:-translate-y-1.5 hover:border-[#C7D2FE] hover:shadow-[0_22px_48px_-20px_rgba(37,99,235,0.18)] md:min-w-64"
               >
                 <p className="text-sm font-bold tracking-tight text-[#0F172A]">{product.name}</p>
                 <p className="mt-1 truncate text-xs font-semibold text-[#64748B]">{product.subcategory}</p>
@@ -97,10 +102,12 @@ export function ProductGrid({
         whileInView="show"
         viewport={{ once: true, amount: 0.12 }}
       >
-        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-[#0F172A] md:text-4xl">Marketplace Catalogue</h2>
-            <p className="mt-1.5 max-w-xl text-sm font-medium text-[#64748B]">Filter by category and surface the right stack in seconds.</p>
+            <h2 className="text-3xl font-extrabold tracking-tight text-[#0F172A] md:text-[2.25rem]">Marketplace catalogue</h2>
+            <p className="mt-2 max-w-xl text-sm font-medium leading-relaxed text-[#64748B] md:text-base">
+              Search, filter, and load more — the same scalable marketplace logic, refined for secondary discovery.
+            </p>
           </div>
           <motion.button
             type="button"
@@ -137,7 +144,7 @@ export function ProductGrid({
         </div>
 
         {!listingInHero ? (
-          <label className="mb-6 flex items-center gap-3 rounded-full border border-[#E5E7EB]/90 bg-white/95 px-5 py-3 shadow-[0_10px_36px_-14px_rgba(15,23,42,0.12)] backdrop-blur-md">
+          <label className="mb-8 flex items-center gap-3 rounded-full border border-[#E5E7EB]/90 bg-white/95 px-5 py-3.5 shadow-[0_14px_44px_-18px_rgba(15,23,42,0.14)] backdrop-blur-md">
             <Search className="h-4 w-4 text-[#94A3B8]" />
             <input
               value={searchTerm}
@@ -155,7 +162,7 @@ export function ProductGrid({
 
         {!listingInHero ? (
           <>
-            <motion.div layout className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            <motion.div layout className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
               {products.slice(0, visibleCount).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -190,13 +197,61 @@ export function ProductGrid({
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.25 }}
-        className="pt-14"
+        className="pt-16"
       >
-        <div className="rounded-3xl border border-[#E5E7EB]/90 bg-white/95 p-8 shadow-[0_20px_50px_-24px_rgba(15,23,42,0.15)] backdrop-blur-sm md:p-10">
-          <h3 className="text-2xl font-extrabold tracking-tight text-[#0F172A] md:text-3xl">Simple Marketplace Pricing</h3>
-          <p className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-[#64748B] md:text-base">
-            Browse free, connect instantly, and close deals faster with one-click WhatsApp outreach.
-          </p>
+        <div className="rounded-3xl border border-[#E5E7EB]/90 bg-white/95 p-8 shadow-[0_24px_56px_-26px_rgba(15,23,42,0.18)] backdrop-blur-md md:p-10">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h3 className="text-2xl font-extrabold tracking-tight text-[#0F172A] md:text-3xl">Marketplace plans</h3>
+              <p className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-[#64748B] md:text-base">
+                Browse publicly, compare categories, and message instantly — pricing adapts per SKU when you connect.
+              </p>
+            </div>
+            <span className="inline-flex w-fit items-center rounded-full border border-[#BFDBFE]/80 bg-[#EFF6FF] px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-[#1d4ed8]">
+              WhatsApp-ready checkout
+            </span>
+          </div>
+
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {[
+              {
+                name: "Starter",
+                price: "Free to browse",
+                blurb: "Search, filter, and shortlist tools before you buy.",
+                perks: ["Category filters", "Popular toggle", "Instant WhatsApp"],
+              },
+              {
+                name: "Teams",
+                price: "Custom bundles",
+                blurb: "Perfect when you need renewals across multiple seats.",
+                perks: ["Priority routing", "Renewal reminders", "Stack recommendations"],
+              },
+              {
+                name: "Partners",
+                price: "Affiliate-ready",
+                blurb: "Want listings featured? We publish partner drops in the newsletter.",
+                perks: ["Placement slots", "Offer orchestration", "Co-branded CTAs"],
+              },
+            ].map((tier) => (
+              <div
+                key={tier.name}
+                className="relative overflow-hidden rounded-2xl border border-[#E5E7EB]/90 bg-gradient-to-br from-white to-[#F8FAFC] p-6 shadow-[0_18px_44px_-22px_rgba(15,23,42,0.15)]"
+              >
+                <div aria-hidden className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#2563EB]/10 blur-2xl" />
+                <h4 className="text-lg font-bold text-[#0F172A]">{tier.name}</h4>
+                <p className="mt-2 text-sm font-semibold text-[#1d4ed8]">{tier.price}</p>
+                <p className="mt-3 text-sm font-medium leading-relaxed text-[#64748B]">{tier.blurb}</p>
+                <ul className="mt-5 space-y-2.5">
+                  {tier.perks.map((perk) => (
+                    <li key={perk} className="flex items-start gap-2 text-sm font-medium text-[#334155]">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#2563EB]" aria-hidden />
+                      {perk}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </motion.div>
 
@@ -206,13 +261,39 @@ export function ProductGrid({
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.25 }}
-        className="pt-10"
+        className="pt-12"
       >
-        <div className="rounded-3xl border border-[#E5E7EB]/90 bg-white/95 p-8 shadow-[0_20px_50px_-24px_rgba(15,23,42,0.15)] backdrop-blur-sm md:p-10">
-          <h3 className="text-2xl font-extrabold tracking-tight text-[#0F172A] md:text-3xl">About This Marketplace</h3>
-          <p className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-[#64748B] md:text-base">
-            Built as a scalable static SaaS discovery layer, ready to connect with a backend catalog later.
-          </p>
+        <div className="rounded-3xl border border-[#E5E7EB]/90 bg-white/95 p-8 shadow-[0_24px_56px_-26px_rgba(15,23,42,0.18)] backdrop-blur-md md:p-10">
+          <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+            <div>
+              <h3 className="text-2xl font-extrabold tracking-tight text-[#0F172A] md:text-3xl">Built for discovery</h3>
+              <p className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-[#64748B] md:text-base">
+                OFF Nerd is primarily a digital agency — this marketplace remains a curated secondary lane for SaaS, streaming,
+                and growth tools. Same reusable cards and filters; tuned visuals for clarity.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/services"
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#2563EB] to-[#1d4ed8] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_12px_32px_-10px_rgba(37,99,235,0.45)] transition hover:shadow-[0_16px_40px_-8px_rgba(37,99,235,0.55)]"
+                >
+                  Explore agency services
+                  <ArrowRight className="h-4 w-4" aria-hidden />
+                </Link>
+                <Link
+                  href="/newsletter"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#CBD5E1] bg-white px-5 py-2.5 text-sm font-semibold text-[#0F172A] shadow-sm transition hover:border-[#94A3B8]"
+                >
+                  Newsletter
+                </Link>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-[#E5E7EB]/90 bg-gradient-to-br from-[#F8FAFC] to-white p-6 shadow-inner">
+              <p className="text-xs font-bold uppercase tracking-wide text-[#64748B]">FYI</p>
+              <p className="mt-3 text-sm font-medium leading-relaxed text-[#334155]">
+                Need a custom SaaS build instead of off-the-shelf tools? We design and ship platforms end-to-end.
+              </p>
+            </div>
+          </div>
         </div>
       </motion.div>
     </section>

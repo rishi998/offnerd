@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .moving-track,
+  .trusted-marquee-track,
+  .animate-logo-float,
+  .animate-gradient-shift {
+    animation: none !important;
+  }
+}
+
 :root {
   --bg: #f5f7fb;
   --primary-blue: #2563eb;
@@ -78,4 +95,21 @@ body {
 
 .animate-logo-float {
   animation: logo-float 4.5s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 14s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
