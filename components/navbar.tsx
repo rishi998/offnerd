@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Menu, MessageCircle, X } from "lucide-react";
 
+/** Solid navbar fill — matches logo field in `/logo-off-nerd.png`. */
+const NAVBAR_YELLOW = "#F9D02C";
+
 const NAV_ITEMS = [
   { href: "/services", label: "Services" },
   { href: "/saas", label: "SaaS" },
@@ -67,68 +70,36 @@ export function Navbar() {
       </AnimatePresence>
 
       <header className="relative sticky top-0 z-50 px-3 pt-4 pb-3 md:px-5 md:pb-4">
-        {/* Ambient layer: logo yellow infused across the bar */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-[min(220px,42vh)] bg-[radial-gradient(ellipse_95%_85%_at_50%_-8%,rgba(250,204,21,0.38)_0%,rgba(255,226,122,0.22)_28%,rgba(255,243,191,0.14)_48%,rgba(247,227,139,0.06)_68%,transparent_82%)]"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#FDE68A]/25 via-[#FFF9E8]/08 to-transparent"
-        />
-
         <div className="relative mx-auto max-w-7xl">
           <motion.div
             className={[
-              "relative overflow-hidden rounded-[32px] border transition-[background-color,backdrop-filter,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              "border-white/20 shadow-[0_10px_40px_rgba(0,0,0,0.08)]",
+              "relative overflow-hidden rounded-[32px] border border-black/[0.09] transition-[box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
               scrolled
-                ? "border-white/25 bg-[linear-gradient(135deg,rgba(255,255,255,0.42)_0%,rgba(255,251,235,0.52)_42%,rgba(254,249,195,0.38)_100%)] shadow-[0_22px_56px_-20px_rgba(15,23,42,0.14),0_10px_28px_-14px_rgba(234,179,8,0.12)] backdrop-blur-[28px] supports-[backdrop-filter]:backdrop-saturate-[1.35]"
-                : "border-white/[0.22] bg-[linear-gradient(145deg,rgba(255,255,255,0.58)_0%,rgba(255,249,232,0.62)_38%,rgba(253,230,138,0.42)_72%,rgba(250,204,21,0.14)_100%)] backdrop-blur-2xl supports-[backdrop-filter]:backdrop-saturate-150",
+                ? "shadow-[0_22px_56px_-18px_rgba(15,23,42,0.16),inset_0_1px_0_rgba(255,255,255,0.32)]"
+                : "shadow-[0_10px_40px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.35)]",
             ].join(" ")}
+            style={{ backgroundColor: NAVBAR_YELLOW }}
           >
-            {/* Reflective top highlight */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/75 to-transparent"
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-[32px] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(255,255,255,0.06)]"
-            />
-            {/* Soft inner wash */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-[32px] bg-gradient-to-b from-white/35 via-transparent to-[#FACC15]/[0.07]"
-            />
-            {/* Bottom ambient glow */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -bottom-10 left-1/2 h-14 w-[88%] max-w-3xl -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(250,204,21,0.22)_0%,transparent_70%)] blur-2xl"
+              className="pointer-events-none absolute inset-0 rounded-[32px] shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_0_rgba(0,0,0,0.04)]"
             />
 
             <div className="relative flex items-center justify-between gap-4 px-4 py-3 md:gap-6 md:px-7 md:py-3.5">
-              {/* Logo — blended glass dock */}
+              {/* Logo — no frame; sits directly on navbar yellow */}
               <motion.div whileHover={reduceMotion ? undefined : { scale: 1.02 }} whileTap={reduceMotion ? undefined : { scale: 0.98 }}>
                 <Link
                   href="/"
-                  className="group/logo relative inline-flex items-center rounded-2xl border border-white/35 bg-gradient-to-br from-white/55 via-[#FFFCF0]/45 to-[#FFF3BF]/35 p-1.5 shadow-[0_8px_28px_-12px_rgba(234,179,8,0.35),inset_0_1px_0_rgba(255,255,255,0.65)] backdrop-blur-md transition-[border-color,box-shadow] duration-300 hover:border-white/50 hover:shadow-[0_12px_36px_-12px_rgba(234,179,8,0.42),0_0_0_1px_rgba(255,255,255,0.35),inset_0_1px_0_rgba(255,255,255,0.75)] md:p-2"
+                  className="relative inline-flex items-center rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[#1e40af]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F9D02C]"
                   onClick={() => setMobileOpen(false)}
                 >
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover/logo:opacity-100"
-                    style={{
-                      boxShadow: "inset 0 0 24px rgba(250, 204, 21, 0.18)",
-                    }}
-                  />
                   <Image
                     src="/logo-off-nerd.png"
                     alt="OFF Nerd logo"
                     width={198}
                     height={84}
                     priority
-                    className="relative z-[1] h-[2.85rem] w-auto rounded-[10px] object-contain md:h-[3.35rem]"
+                    className="h-[2.85rem] w-auto object-contain md:h-[3.35rem]"
                   />
                 </Link>
               </motion.div>
@@ -201,7 +172,7 @@ export function Navbar() {
                 type="button"
                 onClick={() => setMobileOpen((o) => !o)}
                 whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-                className="relative grid h-11 w-11 place-items-center rounded-2xl border border-white/35 bg-white/35 text-[#0c1844] shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] backdrop-blur-md transition-colors hover:bg-white/48 lg:hidden"
+                className="relative grid h-11 w-11 place-items-center rounded-2xl border border-black/10 bg-black/[0.06] text-[#0c1844] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)] transition-colors hover:bg-black/[0.1] lg:hidden"
                 aria-expanded={mobileOpen}
                 aria-label="Toggle menu"
               >
@@ -219,8 +190,10 @@ export function Navbar() {
                   transition={{ duration: reduceMotion ? 0.18 : 0.32, ease: [0.22, 1, 0.36, 1] }}
                   className="relative overflow-hidden lg:hidden"
                 >
-                  <div className="mx-3 mb-3 rounded-[26px] border border-white/28 bg-[linear-gradient(180deg,rgba(255,255,255,0.52)_0%,rgba(255,251,235,0.42)_55%,rgba(253,230,138,0.18)_100%)] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] backdrop-blur-2xl">
-                    <div aria-hidden className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+                  <div
+                    className="mx-3 mb-3 rounded-[26px] border border-black/10 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]"
+                    style={{ backgroundColor: NAVBAR_YELLOW }}
+                  >
                     <ul className="relative space-y-1 pt-1">
                       {NAV_ITEMS.map(({ href, label }, idx) => {
                         const active = linkActive(href);

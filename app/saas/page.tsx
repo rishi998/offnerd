@@ -7,8 +7,14 @@ import Link from "next/link";
 import { Hero } from "@/components/Hero";
 import { LogoMarquee } from "@/components/LogoMarquee";
 import { MarketingShell } from "@/components/MarketingShell";
+import { ProductModalProvider } from "@/components/marketplace/ProductModalProvider";
 import { ProductGrid } from "@/components/ProductGrid";
-import { matchesMarketplaceSearch, products, type ProductCategory } from "@/data/products";
+import {
+  matchesMarketplaceSearch,
+  matchesQuickFilter,
+  type QuickFilter,
+} from "@/data/marketplace";
+import { products, type ProductCategory } from "@/data/products";
 import { primaryButtonClass } from "@/components/marketing/MarketingButtons";
 
 const PAGE_SIZE = 9;
@@ -17,6 +23,7 @@ export default function SaasPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<"All" | ProductCategory>("All");
   const [popularOnly, setPopularOnly] = useState(false);
+  const [quickFilter, setQuickFilter] = useState<QuickFilter>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const scrollToSection = useCallback((sectionId: string) => {
@@ -33,6 +40,7 @@ export default function SaasPage() {
   const handleShowAll = useCallback(() => {
     setSelectedCategory("All");
     setPopularOnly(false);
+    setQuickFilter(null);
     resetListingWindow();
   }, [resetListingWindow]);
 
@@ -40,12 +48,16 @@ export default function SaasPage() {
     return products.filter((product) => {
       const categoryMatch = selectedCategory === "All" || product.category === selectedCategory;
       const popularMatch = popularOnly ? product.popular : true;
-      return categoryMatch && popularMatch && matchesMarketplaceSearch(product, searchTerm);
+      const quickOk = matchesQuickFilter(product, quickFilter);
+      return (
+        categoryMatch && popularMatch && quickOk && matchesMarketplaceSearch(product, searchTerm)
+      );
     });
-  }, [searchTerm, selectedCategory, popularOnly]);
+  }, [searchTerm, selectedCategory, popularOnly, quickFilter]);
 
   return (
     <MarketingShell>
+      <ProductModalProvider>
       <main className="min-h-screen bg-[#F5F7FB] text-[#0F172A]">
         <Hero
           searchTerm={searchTerm}
@@ -76,6 +88,11 @@ export default function SaasPage() {
         listingInHero={Boolean(searchTerm.trim())}
         selectedCategory={selectedCategory}
         popularOnly={popularOnly}
+        quickFilter={quickFilter}
+        onQuickFilterChange={(value) => {
+          setQuickFilter(value);
+          resetListingWindow();
+        }}
         onSearchChange={(value) => {
           setSearchTerm(value);
           resetListingWindow();
@@ -113,6 +130,7 @@ export default function SaasPage() {
       </section>
 
       </main>
+      </ProductModalProvider>
     </MarketingShell>
   );
 }

@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { ProductCard } from "@/components/ProductCard";
+import { useProductModal } from "@/components/marketplace/ProductModalProvider";
 import type { Product, ProductCategory } from "@/data/products";
+import type { QuickFilter } from "@/data/marketplace";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Search } from "lucide-react";
 
@@ -19,11 +21,23 @@ type ProductGridProps = {
   listingInHero: boolean;
   selectedCategory: "All" | ProductCategory;
   popularOnly: boolean;
+  quickFilter: QuickFilter;
+  onQuickFilterChange: (value: QuickFilter) => void;
   onSearchChange: (value: string) => void;
   onCategoryChange: (value: "All" | ProductCategory) => void;
   onPopularToggle: () => void;
   onLoadMore: () => void;
 };
+
+const QUICK_FILTER_CHIPS: { id: QuickFilter; label: string }[] = [
+  { id: "trending", label: "Trending" },
+  { id: "best_sellers", label: "Best sellers" },
+  { id: "ai", label: "AI tools" },
+  { id: "dev", label: "Developer" },
+  { id: "design", label: "Design" },
+  { id: "lifetime", label: "Lifetime" },
+  { id: "limited_stock", label: "Limited stock" },
+];
 
 export function ProductGrid({
   products,
@@ -33,11 +47,15 @@ export function ProductGrid({
   listingInHero,
   selectedCategory,
   popularOnly,
+  quickFilter,
+  onQuickFilterChange,
   onSearchChange,
   onCategoryChange,
   onPopularToggle,
   onLoadMore,
 }: ProductGridProps) {
+  const modal = useProductModal();
+
   const categories: Array<"All" | ProductCategory> = [
     "All",
     "AI Tools",
@@ -79,14 +97,23 @@ export function ProductGrid({
             {carouselItems.map((product, idx) => (
               <button
                 key={`${product.id}-${idx}`}
-                onClick={() =>
-                  window.open(
-                    `https://wa.me/9968743811?text=${encodeURIComponent(`I want ${product.name} - ${product.description} for 1 month`)}`,
-                    "_blank",
-                  )
-                }
-                className="group min-w-60 rounded-2xl border border-[#EEF2FF] bg-gradient-to-br from-white to-[#F8FAFC] px-5 py-4 text-left shadow-[0_12px_32px_-16px_rgba(15,23,42,0.14)] transition duration-300 hover:-translate-y-1.5 hover:border-[#C7D2FE] hover:shadow-[0_22px_48px_-20px_rgba(37,99,235,0.18)] md:min-w-64"
+                type="button"
+                onClick={() => {
+                  if (modal) modal.openProduct(product);
+                  else {
+                    window.open(
+                      `https://wa.me/9968743811?text=${encodeURIComponent(`I want ${product.name} - ${product.description}`)}`,
+                      "_blank",
+                    );
+                  }
+                }}
+                className="group relative min-w-60 rounded-2xl border border-[#EEF2FF] bg-gradient-to-br from-white to-[#F8FAFC] px-5 py-4 text-left shadow-[0_12px_32px_-16px_rgba(15,23,42,0.14)] transition duration-300 hover:-translate-y-1.5 hover:border-[#C7D2FE] hover:shadow-[0_22px_48px_-20px_rgba(37,99,235,0.18)] md:min-w-64"
               >
+                {product.popular ? (
+                  <span className="absolute right-3 top-3 rounded-md bg-[#FACC15] px-1.5 py-0.5 text-[0.55rem] font-extrabold uppercase tracking-wide text-[#713F12] shadow-sm">
+                    Hot
+                  </span>
+                ) : null}
                 <p className="text-sm font-bold tracking-tight text-[#0F172A]">{product.name}</p>
                 <p className="mt-1 truncate text-xs font-semibold text-[#64748B]">{product.subcategory}</p>
               </button>
@@ -143,6 +170,31 @@ export function ProductGrid({
           ))}
         </div>
 
+        <div className="mb-6 flex flex-wrap gap-2">
+          <span className="w-full text-[0.65rem] font-extrabold uppercase tracking-wide text-[#94A3B8] sm:w-auto sm:self-center">
+            Quick filters
+          </span>
+          {QUICK_FILTER_CHIPS.map(({ id, label }) => {
+            const active = quickFilter === id;
+            return (
+              <motion.button
+                key={id}
+                type="button"
+                onClick={() => onQuickFilterChange(active ? null : id)}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                className={`rounded-full px-3.5 py-2 text-xs font-bold transition-shadow md:text-sm ${
+                  active
+                    ? "bg-gradient-to-r from-[#FACC15] to-[#FDE047] text-[#713F12] shadow-[0_10px_26px_-10px_rgba(234,179,8,0.45)] ring-2 ring-[#FACC15]/50"
+                    : "border border-[#E5E7EB] bg-white/95 text-[#475569] shadow-sm hover:border-[#CBD5E1]"
+                }`}
+              >
+                {label}
+              </motion.button>
+            );
+          })}
+        </div>
+
         {!listingInHero ? (
           <label className="mb-8 flex items-center gap-3 rounded-full border border-[#E5E7EB]/90 bg-white/95 px-5 py-3.5 shadow-[0_14px_44px_-18px_rgba(15,23,42,0.14)] backdrop-blur-md">
             <Search className="h-4 w-4 text-[#94A3B8]" />
@@ -150,7 +202,7 @@ export function ProductGrid({
               value={searchTerm}
               onChange={(event) => onSearchChange(event.target.value)}
               type="search"
-              placeholder="Search by name, category, or description..."
+              placeholder="Search tools, features, badges, categories…"
               className="w-full bg-transparent text-sm font-semibold text-[#0F172A] outline-none placeholder:font-medium placeholder:text-[#94A3B8]"
             />
           </label>

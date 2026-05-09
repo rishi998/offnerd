@@ -115,31 +115,24 @@ export const products: Product[] = [
   { id: "stripe", name: "Stripe", description: "Online payments and recurring billing APIs.", category: "Business / Finance", subcategory: "Payments", logo: "St", popular: true },
   { id: "razorpay", name: "Razorpay", description: "Payment gateway and payout solutions for India.", category: "Business / Finance", subcategory: "Payments", logo: "Rz", popular: true },
   { id: "quickbooks", name: "QuickBooks", description: "Accounting, invoicing, and bookkeeping software.", category: "Business / Finance", subcategory: "Accounting", logo: "Qb", popular: false },
+
+  { id: "framer", name: "Framer", description: "Design and publish responsive sites with motion-ready interactions.", category: "Design", subcategory: "UI/UX", logo: "Fr", popular: true },
+  { id: "gemini-pro", name: "Gemini AI Pro", description: "Google Gemini Advanced with workspace integrations and cloud storage.", category: "AI Tools", subcategory: "Productivity", logo: "Gm", popular: true },
+  { id: "mongodb-atlas", name: "MongoDB Atlas", description: "Managed MongoDB clusters with global scaling and backups.", category: "Cloud / DevOps", subcategory: "Backend", logo: "Mg", popular: true },
+  { id: "coursera-plus", name: "Coursera Plus", description: "Unlimited access to thousands of courses and certificates.", category: "Business / Finance", subcategory: "Learning", logo: "Cs", popular: false },
+  { id: "jetbrains", name: "JetBrains All Products", description: "IDE suite including IntelliJ, PyCharm, WebStorm, and more.", category: "Development Tools", subcategory: "IDEs", logo: "Jb", popular: true },
+  { id: "webflow", name: "Webflow", description: "Visual web design, CMS, and hosting for marketing sites.", category: "Design", subcategory: "UI/UX", logo: "Wf", popular: true },
+  { id: "flutterflow", name: "FlutterFlow", description: "Visual builder for Flutter apps with Firebase backends.", category: "Development Tools", subcategory: "AI Coding", logo: "Ff", popular: false },
+  { id: "bubble-io", name: "Bubble.io", description: "No-code web apps with workflows, database, and plugins.", category: "Development Tools", subcategory: "API Tools", logo: "Bb", popular: false },
+  { id: "firecrawl", name: "Firecrawl", description: "Turn websites into clean markdown and structured data for AI.", category: "Development Tools", subcategory: "API Tools", logo: "Fc", popular: true },
+  { id: "linear-app", name: "Linear", description: "Issue tracking and roadmap tool built for modern product teams.", category: "Development Tools", subcategory: "API Tools", logo: "Ln", popular: true },
+  { id: "supabase", name: "Supabase", description: "Open-source Postgres backend with auth, storage, and realtime.", category: "Cloud / DevOps", subcategory: "Backend", logo: "Sb", popular: true },
+  { id: "replit", name: "Replit", description: "Cloud IDE and deployments for rapid prototyping and agents.", category: "Development Tools", subcategory: "IDEs", logo: "Rp", popular: false },
+  { id: "vercel-v0", name: "Vercel v0", description: "AI-generated UI components and Next.js-ready snippets.", category: "Development Tools", subcategory: "AI Coding", logo: "V0", popular: true },
+  { id: "loom-business", name: "Loom Business", description: "Async video messaging with admin controls for teams.", category: "Communication", subcategory: "Meetings", logo: "Lm", popular: false },
+  { id: "tinder-premium", name: "Tinder Premium", description: "Premium dating subscription with boosts and passport.", category: "Communication", subcategory: "Community", logo: "Td", popular: false },
 ];
 
 export const categories: ProductCategory[] = categoryStructure.map((entry) => entry.category);
 
 export const highlightTools = products.filter((product) => product.popular).slice(0, 10).map((product) => product.name);
-
-function compactAlphanumeric(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
-}
-
-/** True if the query matches this catalog tool (id, logo, category, subcategory, name, description; punctuation-insensitive). */
-export function matchesMarketplaceSearch(product: Product, rawQuery: string): boolean {
-  const query = rawQuery.trim().toLowerCase();
-  if (!query) return true;
-
-  const haystack = compactAlphanumeric(
-    [product.id, product.name, product.description, product.category, product.subcategory, product.logo].join(" "),
-  );
-
-  const tokens = query
-    .split(/\s+/)
-    .map((t) => compactAlphanumeric(t))
-    .filter(Boolean);
-
-  if (tokens.length === 0) return true;
-
-  return tokens.every((token) => haystack.includes(token));
-}
