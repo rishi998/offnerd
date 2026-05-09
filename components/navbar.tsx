@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Menu, MessageCircle, X } from "lucide-react";
+import { Home, Menu, MessageCircle, X } from "lucide-react";
 
 /** Solid navbar fill — matches logo field in `/logo-off-nerd.png`. */
 const NAVBAR_YELLOW = "#F9D02C";
@@ -29,6 +29,62 @@ function useScrolled(threshold = 14) {
   }, [threshold]);
 
   return scrolled;
+}
+
+function NavbarHomeIcon({
+  pathname,
+  compact,
+  reduceMotion,
+  onNavigate,
+}: {
+  pathname: string;
+  compact?: boolean;
+  reduceMotion: boolean | null;
+  onNavigate: () => void;
+}) {
+  const active = pathname === "/";
+
+  return (
+    <motion.div
+      whileHover={reduceMotion ? undefined : { y: -2, scale: 1.035 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+      className="relative"
+    >
+      <Link
+        href="/"
+        aria-label="Home"
+        onClick={onNavigate}
+        className={[
+          "group/home relative z-[1] inline-flex outline-none transition-[color,filter] duration-300",
+          compact
+            ? "grid h-11 w-11 place-items-center rounded-2xl"
+            : "items-center justify-center rounded-2xl px-3 py-2",
+          "text-[#0c1844]",
+          "focus-visible:ring-2 focus-visible:ring-[#2563EB]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F9D02C]",
+        ].join(" ")}
+      >
+        <span
+          aria-hidden
+          className={[
+            "pointer-events-none absolute inset-0 rounded-2xl ring-1 transition-[opacity,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            active
+              ? "opacity-100 shadow-[0_10px_28px_-14px_rgba(37,99,235,0.35),0_6px_18px_-12px_rgba(250,204,21,0.22),inset_0_1px_0_rgba(255,255,255,0.72)] ring-white/55"
+              : "opacity-0 ring-white/0 shadow-[0_12px_28px_-16px_rgba(15,23,42,0.12)] group-hover/home:opacity-100 group-hover/home:ring-white/42 group-hover/home:shadow-[0_14px_34px_-18px_rgba(37,99,235,0.12),inset_0_1px_0_rgba(255,255,255,0.55)]",
+          ].join(" ")}
+          style={{
+            background: active
+              ? "linear-gradient(180deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.42) 100%), linear-gradient(135deg, rgba(37,99,235,0.12), rgba(250,204,21,0.14))"
+              : "linear-gradient(180deg, rgba(255,255,255,0.52) 0%, rgba(255,255,255,0.22) 100%)",
+          }}
+        />
+        <Home
+          className={compact ? "relative z-[2] h-5 w-5 shrink-0" : "relative z-[2] h-[18px] w-[18px] shrink-0"}
+          strokeWidth={2}
+          aria-hidden
+        />
+      </Link>
+    </motion.div>
+  );
 }
 
 export function Navbar() {
@@ -85,27 +141,33 @@ export function Navbar() {
               className="pointer-events-none absolute inset-0 rounded-[32px] shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_0_rgba(0,0,0,0.04)]"
             />
 
-            <div className="relative flex items-center justify-between gap-4 px-4 py-3 md:gap-6 md:px-7 md:py-3.5">
-              {/* Logo — no frame; sits directly on navbar yellow */}
-              <motion.div whileHover={reduceMotion ? undefined : { scale: 1.02 }} whileTap={reduceMotion ? undefined : { scale: 0.98 }}>
-                <Link
-                  href="/"
-                  className="relative inline-flex items-center rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[#1e40af]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F9D02C]"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <Image
-                    src="/logo-off-nerd.png"
-                    alt="OFF Nerd logo"
-                    width={198}
-                    height={84}
-                    priority
-                    className="h-[2.85rem] w-auto object-contain md:h-[3.35rem]"
-                  />
-                </Link>
-              </motion.div>
+            <div className="relative flex items-center justify-between gap-3 px-4 py-3 md:gap-5 md:px-7 md:py-3.5 lg:gap-6">
+              <div className="flex shrink-0 items-center">
+                {/* Logo — no frame; sits directly on navbar yellow */}
+                <motion.div whileHover={reduceMotion ? undefined : { scale: 1.02 }} whileTap={reduceMotion ? undefined : { scale: 0.98 }}>
+                  <Link
+                    href="/"
+                    className="relative inline-flex items-center rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[#1e40af]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F9D02C]"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <Image
+                      src="/logo-off-nerd.png"
+                      alt="OFF Nerd logo"
+                      width={277}
+                      height={118}
+                      priority
+                      className="h-[3.99rem] w-auto object-contain md:h-[4.69rem]"
+                    />
+                  </Link>
+                </motion.div>
+              </div>
 
-              {/* Desktop nav */}
-              <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
+              {/* Desktop: Home icon + links — centered between logo and Direct Chat */}
+              <nav
+                className="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex"
+                aria-label="Primary"
+              >
+                <NavbarHomeIcon pathname={pathname} reduceMotion={reduceMotion} onNavigate={() => setMobileOpen(false)} />
                 {NAV_ITEMS.map(({ href, label }) => {
                   const active = linkActive(href);
                   return (
@@ -146,6 +208,17 @@ export function Navbar() {
                 })}
               </nav>
 
+              {/* Mobile: Home + menu · Desktop: Direct Chat */}
+              <div className="flex shrink-0 items-center gap-2 md:gap-2.5">
+                <span className="lg:hidden">
+                  <NavbarHomeIcon
+                    pathname={pathname}
+                    compact
+                    reduceMotion={reduceMotion}
+                    onNavigate={() => setMobileOpen(false)}
+                  />
+                </span>
+
               {/* Direct Chat — tactile glossy CTA */}
               <div className="hidden items-center lg:flex">
                 <motion.div whileHover={reduceMotion ? undefined : { y: -2 }} whileTap={reduceMotion ? undefined : { scale: 0.97 }}>
@@ -178,6 +251,7 @@ export function Navbar() {
               >
                 {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </motion.button>
+              </div>
             </div>
 
             {/* Mobile panel */}
@@ -195,6 +269,28 @@ export function Navbar() {
                     style={{ backgroundColor: NAVBAR_YELLOW }}
                   >
                     <ul className="relative space-y-1 pt-1">
+                      <motion.li
+                        initial={{ opacity: 0, x: reduceMotion ? 0 : -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0 }}
+                      >
+                        <Link
+                          href="/"
+                          onClick={() => setMobileOpen(false)}
+                          className={[
+                            "flex items-center gap-3 rounded-2xl px-4 py-3.5 text-[0.95rem] font-semibold tracking-[-0.01em] transition-[background,box-shadow,color] duration-300",
+                            pathname === "/"
+                              ? "border border-white/35 bg-white/55 text-[#0c1844] shadow-[0_10px_26px_-16px_rgba(15,23,42,0.18),inset_0_1px_0_rgba(255,255,255,0.75)]"
+                              : "border border-transparent text-[#0c1844]/90 hover:border-white/25 hover:bg-white/35",
+                          ].join(" ")}
+                        >
+                          <Home className="h-5 w-5 shrink-0 text-[#0c1844]" strokeWidth={2} aria-hidden />
+                          <span className="flex-1">Home</span>
+                          {pathname === "/" ? (
+                            <span className="ml-2 h-2 w-2 shrink-0 rounded-full bg-gradient-to-br from-[#2563EB] to-[#1e40af] shadow-[0_0_12px_rgba(37,99,235,0.45)]" />
+                          ) : null}
+                        </Link>
+                      </motion.li>
                       {NAV_ITEMS.map(({ href, label }, idx) => {
                         const active = linkActive(href);
                         return (
@@ -202,7 +298,7 @@ export function Navbar() {
                             key={href}
                             initial={{ opacity: 0, x: reduceMotion ? 0 : -8 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: reduceMotion ? 0 : idx * 0.04 }}
+                            transition={{ delay: reduceMotion ? 0 : (idx + 1) * 0.04 }}
                           >
                             <Link
                               href={href}

@@ -288,6 +288,30 @@ export const logoRegistry: Record<string, LogoRegistryEntry> = {
     accent: "#FACC15",
     bucket: "productivity",
   },
+  instagram: {
+    logo: "/logos/productivity/instagram.svg",
+    glow: "rgba(236,72,153,0.18)",
+    accent: "#E4405F",
+    bucket: "productivity",
+  },
+  facebook: {
+    logo: "/logos/productivity/facebook.svg",
+    glow: "rgba(59,130,246,0.2)",
+    accent: "#0668E1",
+    bucket: "productivity",
+  },
+  googleanalytics: {
+    logo: "/logos/productivity/googleanalytics.svg",
+    glow: "rgba(249,115,22,0.18)",
+    accent: "#F97316",
+    bucket: "productivity",
+  },
+  googletagmanager: {
+    logo: "/logos/productivity/googletagmanager.svg",
+    glow: "rgba(56,189,248,0.18)",
+    accent: "#38BDF8",
+    bucket: "productivity",
+  },
   figma: {
     logo: "/logos/design/figma.svg",
     glow: "rgba(168,85,247,0.16)",
