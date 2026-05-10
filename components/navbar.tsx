@@ -31,6 +31,21 @@ function useScrolled(threshold = 14) {
   return scrolled;
 }
 
+/** Desktop (lg+) only — hover scale on the logo must not run on mobile or it overflows narrow viewports. */
+function useLgBreakpoint() {
+  const [lg, setLg] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const apply = () => setLg(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  return lg;
+}
+
 function NavbarHomeIcon({
   pathname,
   compact,
@@ -63,9 +78,9 @@ function NavbarHomeIcon({
 
   return (
     <motion.div
-      whileHover={reduceMotion ? undefined : compact ? { y: 0, scale: 1.02 } : { y: -2, scale: 1.035 }}
+      whileHover={reduceMotion ? undefined : compact ? undefined : { y: -2, scale: 1.035 }}
       whileTap={reduceMotion ? undefined : { scale: 0.97 }}
-      className="relative"
+      className="relative shrink-0"
     >
       <Link
         href="/"
@@ -108,6 +123,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const scrolled = useScrolled();
   const reduceMotion = useReducedMotion();
+  const isLg = useLgBreakpoint();
 
   const linkActive = (href: string) => pathname === href || (href !== "/" && pathname.startsWith(href));
 
@@ -141,14 +157,14 @@ export function Navbar() {
         ) : null}
       </AnimatePresence>
 
-      <header className="relative sticky top-0 z-50 px-2 pt-2 pb-1.5 max-[340px]:px-1.5 max-[340px]:pt-1.5 max-[340px]:pb-1.5 min-[375px]:max-lg:px-2.5 min-[375px]:max-lg:pt-2 min-[375px]:max-lg:pb-1.5 lg:px-5 lg:pt-4 lg:pb-4">
-        <div className="relative mx-auto max-w-7xl">
+      <header className="relative sticky top-0 z-50 box-border w-full min-w-0 max-w-[100vw] pt-2 pb-1.5 pl-[max(10px,env(safe-area-inset-left,0px))] pr-[max(10px,env(safe-area-inset-right,0px))] max-[340px]:pt-1.5 max-[340px]:pb-1.5 max-[340px]:pl-[max(8px,env(safe-area-inset-left,0px))] max-[340px]:pr-[max(8px,env(safe-area-inset-right,0px))] min-[375px]:max-lg:pt-2 min-[375px]:max-lg:pb-1.5 min-[375px]:max-lg:pl-[max(12px,env(safe-area-inset-left,0px))] min-[375px]:max-lg:pr-[max(12px,env(safe-area-inset-right,0px))] lg:max-w-none lg:px-5 lg:pt-4 lg:pb-4">
+        <div className="relative mx-auto w-full min-w-0 max-w-7xl">
           <motion.div
             className={[
-              "relative overflow-hidden border border-black/[0.09] transition-[box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] max-lg:rounded-[22px] lg:rounded-[32px]",
+              "relative box-border w-full min-w-0 max-w-full overflow-hidden border border-black/[0.09] transition-[box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] max-lg:rounded-[22px] lg:rounded-[32px]",
               scrolled
-                ? "max-lg:shadow-[0_12px_34px_-14px_rgba(15,23,42,0.1),inset_0_1px_0_rgba(255,255,255,0.2)] lg:shadow-[0_22px_56px_-18px_rgba(15,23,42,0.16),inset_0_1px_0_rgba(255,255,255,0.32)]"
-                : "max-lg:shadow-[0_5px_20px_-6px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.22)] lg:shadow-[0_10px_40px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.35)]",
+                ? "max-lg:shadow-[0_8px_24px_-12px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.18)] lg:shadow-[0_22px_56px_-18px_rgba(15,23,42,0.16),inset_0_1px_0_rgba(255,255,255,0.32)]"
+                : "max-lg:shadow-[0_4px_16px_-8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.2)] lg:shadow-[0_10px_40px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.35)]",
             ].join(" ")}
             style={{ backgroundColor: NAVBAR_YELLOW }}
           >
@@ -157,13 +173,17 @@ export function Navbar() {
               className="pointer-events-none absolute inset-0 max-lg:rounded-[22px] max-lg:shadow-[inset_0_1px_0_rgba(255,255,255,0.17),inset_0_-1px_0_rgba(0,0,0,0.025)] lg:rounded-[32px] lg:shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_0_rgba(0,0,0,0.04)]"
             />
 
-            <div className="relative flex items-center justify-between gap-2 px-2.5 py-2 max-[340px]:gap-1.5 max-[340px]:px-2 max-[340px]:py-1.5 min-[375px]:max-lg:gap-2.5 min-[375px]:max-lg:px-3.5 min-[375px]:max-lg:py-2 lg:gap-6 lg:px-7 lg:py-3.5">
-              <div className="flex shrink-0 items-center">
+            <div className="relative flex w-full min-w-0 max-w-full items-center justify-between gap-2 px-2 py-2 max-[340px]:gap-1.5 max-[340px]:px-1.5 max-[340px]:py-1.5 min-[375px]:max-lg:gap-2 min-[375px]:max-lg:px-2.5 min-[375px]:max-lg:py-2 lg:gap-6 lg:px-7 lg:py-3.5">
+              <div className="flex min-w-0 flex-1 items-center lg:w-auto lg:flex-none lg:shrink-0">
                 {/* Logo — no frame; sits directly on navbar yellow */}
-                <motion.div whileHover={reduceMotion ? undefined : { scale: 1.02 }} whileTap={reduceMotion ? undefined : { scale: 0.98 }}>
+                <motion.div
+                  className="min-w-0 max-w-full"
+                  whileHover={reduceMotion || !isLg ? undefined : { scale: 1.02 }}
+                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                >
                   <Link
                     href="/"
-                    className="relative inline-flex items-center rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[#1e40af]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F9D02C]"
+                    className="relative flex max-w-full items-center rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[#1e40af]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F9D02C] lg:inline-flex"
                     onClick={() => setMobileOpen(false)}
                   >
                     <Image
@@ -172,7 +192,8 @@ export function Navbar() {
                       width={277}
                       height={118}
                       priority
-                      className="h-[2.4rem] w-auto max-w-[9.25rem] object-contain max-[340px]:h-[2.1rem] max-[340px]:max-w-[8.5rem] min-[375px]:max-lg:h-[2.72rem] min-[375px]:max-lg:max-w-[min(100%,11rem)] lg:h-[4.69rem] lg:max-w-none"
+                      sizes="(max-width: 1023px) 150px, 220px"
+                      className="h-[2.4rem] w-auto max-w-[min(100%,9.25rem)] object-contain object-left max-[340px]:h-[2.05rem] max-[340px]:max-w-[min(100%,8.25rem)] min-[375px]:max-lg:h-[2.65rem] min-[375px]:max-lg:max-w-[min(100%,10.5rem)] lg:h-[4.69rem] lg:max-w-none"
                     />
                   </Link>
                 </motion.div>
@@ -225,8 +246,8 @@ export function Navbar() {
               </nav>
 
               {/* Mobile: Home + menu · Desktop: Direct Chat */}
-              <div className="flex shrink-0 items-center gap-1.5 max-[340px]:gap-1.5 lg:gap-2.5">
-                <span className="lg:hidden">
+              <div className="flex shrink-0 items-center gap-1 max-[340px]:gap-1 lg:gap-2.5">
+                <span className="shrink-0 lg:hidden">
                   <NavbarHomeIcon
                     pathname={pathname}
                     compact
