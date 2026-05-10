@@ -44,9 +44,26 @@ function NavbarHomeIcon({
 }) {
   const active = pathname === "/";
 
+  const glassRadius = compact ? "rounded-lg" : "rounded-2xl";
+
+  const activePillClass = compact
+    ? active
+      ? "opacity-100 ring-1 ring-white/35 shadow-[0_2px_8px_-4px_rgba(15,23,42,0.06),inset_0_1px_0_rgba(255,255,255,0.42)]"
+      : "opacity-0 ring-white/0 shadow-[0_3px_10px_-6px_rgba(15,23,42,0.05)] group-hover/home:opacity-100 group-hover/home:ring-white/28 group-hover/home:shadow-[0_3px_10px_-5px_rgba(15,23,42,0.06),inset_0_1px_0_rgba(255,255,255,0.38)]"
+    : active
+      ? "opacity-100 shadow-[0_10px_28px_-14px_rgba(37,99,235,0.35),0_6px_18px_-12px_rgba(250,204,21,0.22),inset_0_1px_0_rgba(255,255,255,0.72)] ring-white/55"
+      : "opacity-0 ring-white/0 shadow-[0_12px_28px_-16px_rgba(15,23,42,0.12)] group-hover/home:opacity-100 group-hover/home:ring-white/42 group-hover/home:shadow-[0_14px_34px_-18px_rgba(37,99,235,0.12),inset_0_1px_0_rgba(255,255,255,0.55)]";
+
+  const activePillBackground =
+    compact && active
+      ? "linear-gradient(180deg, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.22) 100%), linear-gradient(135deg, rgba(37,99,235,0.03), rgba(250,204,21,0.04))"
+      : !compact && active
+        ? "linear-gradient(180deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.42) 100%), linear-gradient(135deg, rgba(37,99,235,0.12), rgba(250,204,21,0.14))"
+        : "linear-gradient(180deg, rgba(255,255,255,0.52) 0%, rgba(255,255,255,0.22) 100%)";
+
   return (
     <motion.div
-      whileHover={reduceMotion ? undefined : { y: -2, scale: 1.035 }}
+      whileHover={reduceMotion ? undefined : compact ? { y: 0, scale: 1.02 } : { y: -2, scale: 1.035 }}
       whileTap={reduceMotion ? undefined : { scale: 0.97 }}
       className="relative"
     >
@@ -57,29 +74,28 @@ function NavbarHomeIcon({
         className={[
           "group/home relative z-[1] inline-flex outline-none transition-[color,filter] duration-300",
           compact
-            ? "grid h-11 w-11 place-items-center rounded-2xl"
+            ? "grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-lg border border-black/[0.08] bg-gradient-to-b from-white/26 to-white/[0.1] text-[#020617] shadow-[inset_0_1px_0_rgba(255,255,255,0.38),0_1px_6px_-3px_rgba(15,23,42,0.04)] transition-[background-color,box-shadow,filter] duration-300 hover:from-white/32 hover:to-white/[0.14] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.44),0_2px_8px_-4px_rgba(15,23,42,0.05)]"
             : "items-center justify-center rounded-2xl px-3 py-2",
-          "text-[#0c1844]",
+          !compact && "text-[#0c1844]",
           "focus-visible:ring-2 focus-visible:ring-[#2563EB]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F9D02C]",
         ].join(" ")}
       >
         <span
           aria-hidden
           className={[
-            "pointer-events-none absolute inset-0 rounded-2xl ring-1 transition-[opacity,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-            active
-              ? "opacity-100 shadow-[0_10px_28px_-14px_rgba(37,99,235,0.35),0_6px_18px_-12px_rgba(250,204,21,0.22),inset_0_1px_0_rgba(255,255,255,0.72)] ring-white/55"
-              : "opacity-0 ring-white/0 shadow-[0_12px_28px_-16px_rgba(15,23,42,0.12)] group-hover/home:opacity-100 group-hover/home:ring-white/42 group-hover/home:shadow-[0_14px_34px_-18px_rgba(37,99,235,0.12),inset_0_1px_0_rgba(255,255,255,0.55)]",
+            "pointer-events-none absolute inset-0 ring-1 transition-[opacity,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            glassRadius,
+            activePillClass,
           ].join(" ")}
-          style={{
-            background: active
-              ? "linear-gradient(180deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.42) 100%), linear-gradient(135deg, rgba(37,99,235,0.12), rgba(250,204,21,0.14))"
-              : "linear-gradient(180deg, rgba(255,255,255,0.52) 0%, rgba(255,255,255,0.22) 100%)",
-          }}
+          style={{ background: activePillBackground }}
         />
         <Home
-          className={compact ? "relative z-[2] h-5 w-5 shrink-0" : "relative z-[2] h-[18px] w-[18px] shrink-0"}
-          strokeWidth={2}
+          className={
+            compact
+              ? "relative z-[2] h-4 w-4 shrink-0 text-[#020617] drop-shadow-[0_0.5px_0_rgba(255,255,255,0.55)]"
+              : "relative z-[2] h-[18px] w-[18px] shrink-0"
+          }
+          strokeWidth={compact ? 2.6 : 2}
           aria-hidden
         />
       </Link>
@@ -118,30 +134,30 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: reduceMotion ? 0.15 : 0.28 }}
-            className="fixed inset-0 z-40 cursor-default bg-[#0f172a]/[0.12] backdrop-blur-[3px] lg:hidden"
+            className="fixed inset-0 z-40 cursor-default bg-[#0f172a]/[0.08] backdrop-blur-[2px] lg:hidden"
             aria-label="Close menu"
             onClick={() => setMobileOpen(false)}
           />
         ) : null}
       </AnimatePresence>
 
-      <header className="relative sticky top-0 z-50 px-3 pt-4 pb-3 md:px-5 md:pb-4">
+      <header className="relative sticky top-0 z-50 px-2 pt-2 pb-1.5 max-[340px]:px-1.5 max-[340px]:pt-1.5 max-[340px]:pb-1.5 min-[375px]:max-lg:px-2.5 min-[375px]:max-lg:pt-2 min-[375px]:max-lg:pb-1.5 lg:px-5 lg:pt-4 lg:pb-4">
         <div className="relative mx-auto max-w-7xl">
           <motion.div
             className={[
-              "relative overflow-hidden rounded-[32px] border border-black/[0.09] transition-[box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "relative overflow-hidden border border-black/[0.09] transition-[box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] max-lg:rounded-[22px] lg:rounded-[32px]",
               scrolled
-                ? "shadow-[0_22px_56px_-18px_rgba(15,23,42,0.16),inset_0_1px_0_rgba(255,255,255,0.32)]"
-                : "shadow-[0_10px_40px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.35)]",
+                ? "max-lg:shadow-[0_12px_34px_-14px_rgba(15,23,42,0.1),inset_0_1px_0_rgba(255,255,255,0.2)] lg:shadow-[0_22px_56px_-18px_rgba(15,23,42,0.16),inset_0_1px_0_rgba(255,255,255,0.32)]"
+                : "max-lg:shadow-[0_5px_20px_-6px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.22)] lg:shadow-[0_10px_40px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.35)]",
             ].join(" ")}
             style={{ backgroundColor: NAVBAR_YELLOW }}
           >
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-[32px] shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_0_rgba(0,0,0,0.04)]"
+              className="pointer-events-none absolute inset-0 max-lg:rounded-[22px] max-lg:shadow-[inset_0_1px_0_rgba(255,255,255,0.17),inset_0_-1px_0_rgba(0,0,0,0.025)] lg:rounded-[32px] lg:shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_0_rgba(0,0,0,0.04)]"
             />
 
-            <div className="relative flex items-center justify-between gap-3 px-4 py-3 md:gap-5 md:px-7 md:py-3.5 lg:gap-6">
+            <div className="relative flex items-center justify-between gap-2 px-2.5 py-2 max-[340px]:gap-1.5 max-[340px]:px-2 max-[340px]:py-1.5 min-[375px]:max-lg:gap-2.5 min-[375px]:max-lg:px-3.5 min-[375px]:max-lg:py-2 lg:gap-6 lg:px-7 lg:py-3.5">
               <div className="flex shrink-0 items-center">
                 {/* Logo — no frame; sits directly on navbar yellow */}
                 <motion.div whileHover={reduceMotion ? undefined : { scale: 1.02 }} whileTap={reduceMotion ? undefined : { scale: 0.98 }}>
@@ -156,7 +172,7 @@ export function Navbar() {
                       width={277}
                       height={118}
                       priority
-                      className="h-[3.99rem] w-auto object-contain md:h-[4.69rem]"
+                      className="h-[2.4rem] w-auto max-w-[9.25rem] object-contain max-[340px]:h-[2.1rem] max-[340px]:max-w-[8.5rem] min-[375px]:max-lg:h-[2.72rem] min-[375px]:max-lg:max-w-[min(100%,11rem)] lg:h-[4.69rem] lg:max-w-none"
                     />
                   </Link>
                 </motion.div>
@@ -209,7 +225,7 @@ export function Navbar() {
               </nav>
 
               {/* Mobile: Home + menu · Desktop: Direct Chat */}
-              <div className="flex shrink-0 items-center gap-2 md:gap-2.5">
+              <div className="flex shrink-0 items-center gap-1.5 max-[340px]:gap-1.5 lg:gap-2.5">
                 <span className="lg:hidden">
                   <NavbarHomeIcon
                     pathname={pathname}
@@ -219,38 +235,42 @@ export function Navbar() {
                   />
                 </span>
 
-              {/* Direct Chat — tactile glossy CTA */}
-              <div className="hidden items-center lg:flex">
-                <motion.div whileHover={reduceMotion ? undefined : { y: -2 }} whileTap={reduceMotion ? undefined : { scale: 0.97 }}>
-                  <Link
-                    href="/direct-chat"
-                    className="group/chat relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-white/25 bg-gradient-to-b from-[#1e4bbf] via-[#1d4ed8] to-[#172554] px-6 py-2.5 text-sm font-semibold tracking-tight text-white shadow-[0_14px_34px_-12px_rgba(30,64,175,0.55),0_8px_22px_-14px_rgba(15,23,42,0.35),inset_0_1px_0_rgba(255,255,255,0.35)] transition-[box-shadow,border-color] duration-300 hover:border-white/35 hover:shadow-[0_20px_44px_-14px_rgba(29,78,216,0.55),0_10px_28px_-12px_rgba(250,204,21,0.14),inset_0_1px_0_rgba(255,255,255,0.45)]"
-                  >
-                    <span
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/[0.22] to-transparent opacity-90"
-                    />
-                    <span
-                      aria-hidden
-                      className="pointer-events-none absolute -left-1/2 top-0 h-full w-1/2 skew-x-[-18deg] bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-[transform,opacity] duration-700 ease-out group-hover/chat:translate-x-[220%] group-hover/chat:opacity-100"
-                    />
-                    <MessageCircle className="relative z-[1] h-[17px] w-[17px] opacity-95" strokeWidth={2} aria-hidden />
-                    <span className="relative z-[1]">Direct Chat</span>
-                  </Link>
-                </motion.div>
-              </div>
+                {/* Direct Chat — tactile glossy CTA */}
+                <div className="hidden items-center lg:flex">
+                  <motion.div whileHover={reduceMotion ? undefined : { y: -2 }} whileTap={reduceMotion ? undefined : { scale: 0.97 }}>
+                    <Link
+                      href="/direct-chat"
+                      className="group/chat relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-white/25 bg-gradient-to-b from-[#1e4bbf] via-[#1d4ed8] to-[#172554] px-6 py-2.5 text-sm font-semibold tracking-tight text-white shadow-[0_14px_34px_-12px_rgba(30,64,175,0.55),0_8px_22px_-14px_rgba(15,23,42,0.35),inset_0_1px_0_rgba(255,255,255,0.35)] transition-[box-shadow,border-color] duration-300 hover:border-white/35 hover:shadow-[0_20px_44px_-14px_rgba(29,78,216,0.55),0_10px_28px_-12px_rgba(250,204,21,0.14),inset_0_1px_0_rgba(255,255,255,0.45)]"
+                    >
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/[0.22] to-transparent opacity-90"
+                      />
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute -left-1/2 top-0 h-full w-1/2 skew-x-[-18deg] bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-[transform,opacity] duration-700 ease-out group-hover/chat:translate-x-[220%] group-hover/chat:opacity-100"
+                      />
+                      <MessageCircle className="relative z-[1] h-[17px] w-[17px] opacity-95" strokeWidth={2} aria-hidden />
+                      <span className="relative z-[1]">Direct Chat</span>
+                    </Link>
+                  </motion.div>
+                </div>
 
-              {/* Mobile toggle */}
-              <motion.button
-                type="button"
-                onClick={() => setMobileOpen((o) => !o)}
-                whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-                className="relative grid h-11 w-11 place-items-center rounded-2xl border border-black/10 bg-black/[0.06] text-[#0c1844] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)] transition-colors hover:bg-black/[0.1] lg:hidden"
-                aria-expanded={mobileOpen}
-                aria-label="Toggle menu"
-              >
-                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </motion.button>
+                {/* Mobile toggle — glass treatment aligned with compact home */}
+                <motion.button
+                  type="button"
+                  onClick={() => setMobileOpen((o) => !o)}
+                  whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+                  className="relative grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-black/[0.08] bg-gradient-to-b from-white/26 to-white/[0.1] text-[#020617] shadow-[inset_0_1px_0_rgba(255,255,255,0.38),0_1px_6px_-3px_rgba(15,23,42,0.04)] transition-[background-color,box-shadow,color] duration-300 hover:from-white/32 hover:to-white/[0.14] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.44),0_2px_8px_-4px_rgba(15,23,42,0.05)] lg:hidden"
+                  aria-expanded={mobileOpen}
+                  aria-label="Toggle menu"
+                >
+                  {mobileOpen ? (
+                    <X className="relative z-[1] h-4 w-4 drop-shadow-[0_0.5px_0_rgba(255,255,255,0.5)]" strokeWidth={2.6} aria-hidden />
+                  ) : (
+                    <Menu className="relative z-[1] h-4 w-4 drop-shadow-[0_0.5px_0_rgba(255,255,255,0.5)]" strokeWidth={2.6} aria-hidden />
+                  )}
+                </motion.button>
               </div>
             </div>
 
