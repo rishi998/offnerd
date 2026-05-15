@@ -1,13 +1,42 @@
 "use client";
 
 import Link from "next/link";
+import type { FormEvent } from "react";
 import { motion } from "framer-motion";
-import { Clock3, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Clock3, ExternalLink, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { MarketingShell } from "@/components/MarketingShell";
 import { primaryButtonClass, secondaryButtonClass } from "@/components/marketing/MarketingButtons";
-import { WHATSAPP_GROUP_URL, whatsappDmHref } from "@/lib/site";
+import { WHATSAPP_CONTACT_URL, WHATSAPP_GROUP_URL, whatsappDmHref } from "@/lib/site";
+
+function buildInquiryMessage(name: string, email: string, summary: string) {
+  return [
+    "Hi — new inquiry from the OFF Nerd contact form.",
+    "",
+    `Name: ${name}`,
+    `Email: ${email}`,
+    "",
+    "Project summary:",
+    summary,
+  ].join("\n");
+}
 
 export default function ContactPage() {
+  function onFormSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const name = String(form.get("name") ?? "").trim();
+    const email = String(form.get("email") ?? "").trim();
+    const summary = String(form.get("summary") ?? "").trim();
+
+    if (!name || !email || !summary) {
+      window.alert("Please fill in your name, email, and project summary so we can reply on WhatsApp.");
+      return;
+    }
+
+    const url = whatsappDmHref(buildInquiryMessage(name, email, summary));
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
   return (
     <MarketingShell>
       <main className="min-h-screen bg-[#F5F7FB] text-[#0F172A]">
@@ -26,18 +55,28 @@ export default function ContactPage() {
             <div className="mt-12 grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
               <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.05 }} className="rounded-[1.75rem] border border-[#E5E7EB]/90 bg-white/95 p-8 shadow-[0_22px_56px_-26px_rgba(15,23,42,0.18)] backdrop-blur-md md:p-10">
                 <h2 className="text-xl font-extrabold">Send a message</h2>
-                <p className="mt-2 text-sm font-medium text-[#64748B]">Placeholder form — wire to your backend or form provider.</p>
+                <p className="mt-2 text-sm font-medium text-[#64748B]">
+                  Submitting opens WhatsApp with your details prefilled so you can send the message in one tap.
+                </p>
 
-                <form className="mt-8 space-y-5" onSubmit={(e) => e.preventDefault()}>
+                <form className="mt-8 space-y-5" onSubmit={onFormSubmit}>
                   <div className="grid gap-5 md:grid-cols-2">
                     <label className="block text-sm font-bold text-[#334155]">
                       Name
-                      <input className="mt-2 w-full rounded-2xl border border-[#E5E7EB]/90 bg-white px-4 py-3 text-sm font-semibold text-[#0F172A] outline-none ring-1 ring-transparent focus:ring-[#2563EB]/35" placeholder="Your name" />
+                      <input
+                        name="name"
+                        required
+                        autoComplete="name"
+                        className="mt-2 w-full rounded-2xl border border-[#E5E7EB]/90 bg-white px-4 py-3 text-sm font-semibold text-[#0F172A] outline-none ring-1 ring-transparent focus:ring-[#2563EB]/35"
+                        placeholder="Your name"
+                      />
                     </label>
                     <label className="block text-sm font-bold text-[#334155]">
                       Email
                       <input
+                        name="email"
                         type="email"
+                        required
                         autoComplete="email"
                         className="mt-2 w-full rounded-2xl border border-[#E5E7EB]/90 bg-white px-4 py-3 text-sm font-semibold text-[#0F172A] outline-none ring-1 ring-transparent focus:ring-[#2563EB]/35"
                         placeholder="you@company.com"
@@ -46,17 +85,25 @@ export default function ContactPage() {
                   </div>
                   <label className="block text-sm font-bold text-[#334155]">
                     Project summary
-                    <textarea rows={5} className="mt-2 w-full rounded-2xl border border-[#E5E7EB]/90 bg-white px-4 py-3 text-sm font-semibold text-[#0F172A] outline-none ring-1 ring-transparent focus:ring-[#2563EB]/35" placeholder="Goals, scope, deadlines, budget band..." />
+                    <textarea
+                      name="summary"
+                      required
+                      minLength={10}
+                      rows={5}
+                      className="mt-2 w-full rounded-2xl border border-[#E5E7EB]/90 bg-white px-4 py-3 text-sm font-semibold text-[#0F172A] outline-none ring-1 ring-transparent focus:ring-[#2563EB]/35"
+                      placeholder="Goals, scope, deadlines, budget band..."
+                    />
                   </label>
-                  <motion.button type="submit" whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} className={`${primaryButtonClass} w-full md:w-auto`}>
-                    Submit inquiry
+                  <motion.button type="submit" whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} className={`${primaryButtonClass} inline-flex w-full items-center justify-center gap-2 md:w-auto`}>
+                    <MessageCircle className="h-4 w-4" aria-hidden />
+                    Send via WhatsApp
                   </motion.button>
                 </form>
               </motion.div>
 
               <div className="space-y-6">
                 <motion.a
-                  href={whatsappDmHref("Hi OFF Nerd — I'd like to discuss a project.")}
+                  href={WHATSAPP_CONTACT_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   initial={{ opacity: 0, y: 18 }}
@@ -69,10 +116,16 @@ export default function ContactPage() {
                     <span className="grid h-12 w-12 place-items-center rounded-2xl bg-white text-[#128C7E] shadow-sm">
                       <MessageCircle className="h-6 w-6" aria-hidden />
                     </span>
-                    <div>
-                      <p className="text-sm font-extrabold uppercase tracking-wide text-[#15803D]">WhatsApp CTA</p>
-                      <p className="mt-2 text-lg font-bold text-[#0F172A]">Message us instantly</p>
-                      <p className="mt-2 text-sm font-medium text-[#64748B]">Opens WhatsApp with a prefilled note — swap phone routing centrally in `lib/site.ts`.</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-extrabold uppercase tracking-wide text-[#15803D]">WhatsApp</p>
+                      <p className="mt-2 text-lg font-bold text-[#0F172A]">Message us directly</p>
+                      <p className="mt-2 break-all text-sm font-medium text-[#64748B]">
+                        <span className="font-semibold text-[#0F172A]">Contact URL:</span> {WHATSAPP_CONTACT_URL}
+                      </p>
+                      <p className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[#15803D]">
+                        Open chat
+                        <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                      </p>
                     </div>
                   </div>
                 </motion.a>

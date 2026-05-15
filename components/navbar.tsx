@@ -5,7 +5,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Home, Menu, MessageCircle, X } from "lucide-react";
+import { Home, MessageCircle } from "lucide-react";
+import { MobileNavControls } from "@/components/navbar/MobileNavControls";
 
 /** Solid navbar fill — matches logo field in `/logo-off-nerd.png`. */
 const NAVBAR_YELLOW = "#F9D02C";
@@ -247,14 +248,12 @@ export function Navbar() {
 
               {/* Mobile: Home + menu · Desktop: Direct Chat */}
               <div className="flex shrink-0 items-center gap-1 max-[340px]:gap-1 lg:gap-2.5">
-                <span className="shrink-0 lg:hidden">
-                  <NavbarHomeIcon
-                    pathname={pathname}
-                    compact
-                    reduceMotion={reduceMotion}
-                    onNavigate={() => setMobileOpen(false)}
-                  />
-                </span>
+                <MobileNavControls
+                  pathname={pathname}
+                  menuOpen={mobileOpen}
+                  onToggleMenu={() => setMobileOpen((o) => !o)}
+                  onNavigate={() => setMobileOpen(false)}
+                />
 
                 {/* Direct Chat — tactile glossy CTA */}
                 <div className="hidden items-center lg:flex">
@@ -277,21 +276,6 @@ export function Navbar() {
                   </motion.div>
                 </div>
 
-                {/* Mobile toggle — glass treatment aligned with compact home */}
-                <motion.button
-                  type="button"
-                  onClick={() => setMobileOpen((o) => !o)}
-                  whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-                  className="relative grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-black/[0.08] bg-gradient-to-b from-white/26 to-white/[0.1] text-[#020617] shadow-[inset_0_1px_0_rgba(255,255,255,0.38),0_1px_6px_-3px_rgba(15,23,42,0.04)] transition-[background-color,box-shadow,color] duration-300 hover:from-white/32 hover:to-white/[0.14] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.44),0_2px_8px_-4px_rgba(15,23,42,0.05)] lg:hidden"
-                  aria-expanded={mobileOpen}
-                  aria-label="Toggle menu"
-                >
-                  {mobileOpen ? (
-                    <X className="relative z-[1] h-4 w-4 drop-shadow-[0_0.5px_0_rgba(255,255,255,0.5)]" strokeWidth={2.6} aria-hidden />
-                  ) : (
-                    <Menu className="relative z-[1] h-4 w-4 drop-shadow-[0_0.5px_0_rgba(255,255,255,0.5)]" strokeWidth={2.6} aria-hidden />
-                  )}
-                </motion.button>
               </div>
             </div>
 

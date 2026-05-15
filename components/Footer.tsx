@@ -11,6 +11,7 @@ const quickLinks = [
   { href: "/newsletter", label: "Newsletter" },
   { href: "/about-us", label: "About Us" },
   { href: "/contact-us", label: "Contact Us" },
+  { href: "/feedback", label: "Share Feedback" },
   { href: "/direct-chat", label: "Direct Chat" },
 ];
 
