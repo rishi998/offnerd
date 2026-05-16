@@ -2,6 +2,8 @@ import type { Product, ProductCategory } from "./products";
 import { resolveLogoKey } from "@/lib/logo-registry";
 
 /** Structured marketplace metadata — merged with catalog `Product` rows. */
+export const UNIFIED_SALE_PRICE_INR = 199;
+
 export type ProductBadgeId =
   | "LIMITED_STOCK"
   | "VERIFIED"
@@ -78,10 +80,18 @@ function categoryBadges(category: ProductCategory): ProductBadgeId[] {
   return [];
 }
 
+function withUnifiedSalePrice(listing: MarketplaceListing): MarketplaceListing {
+  return {
+    ...listing,
+    salePriceINR: UNIFIED_SALE_PRICE_INR,
+    salePriceDisplay: `₹${UNIFIED_SALE_PRICE_INR.toLocaleString("en-IN")}`,
+  };
+}
+
 function inferListing(product: Product): MarketplaceListing {
   const h = hashId(product.id);
   const official = 12000 + (h % 24000) * 50;
-  const sale = Math.max(299, Math.round(official * (0.015 + (h % 7) * 0.004)));
+  const sale = UNIFIED_SALE_PRICE_INR;
 
   const badges: ProductBadgeId[] = ["VERIFIED", ...categoryBadges(product.category)];
   if (product.popular) badges.push("BEST_SELLER");
@@ -364,7 +374,7 @@ function mergeListing(product: Product): MarketplaceListing {
 }
 
 export function getMarketplaceView(product: Product): MarketplaceView {
-  const listing = mergeListing(product);
+  const listing = withUnifiedSalePrice(mergeListing(product));
   const pct =
     listing.officialPriceINR > 0
       ? Math.min(99, Math.max(5, Math.round((1 - listing.salePriceINR / listing.officialPriceINR) * 100)))
